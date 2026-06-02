@@ -33,19 +33,19 @@ high_scores_box = high_scores.get_rect(center = (screen_width / 2, screen_height
 
 # Icons of pacman and ghosts
 pacman_icon = ImageElement(
-    "/home/ohavari/Desktop/PacMan42/pacman-removebg-preview.png", 
+    "pacman-removebg-preview.png", 
     (120, 120), 
     (screen_width / 2 + 195, screen_height / 2 + 180)
 )
 
 red_ghost_pacman = ImageElement(
-    "/home/ohavari/Desktop/PacMan42/red_ghost-removebg-preview.png",
+    "red_ghost-removebg-preview.png",
     (150, 150),
     (screen_width / 2 - 520, screen_height / 2)
 )
 
 orange_ghost = ImageElement(
-    "/home/ohavari/Desktop/PacMan42/orange_ghost-removebg-preview.png",
+    "orange_ghost-removebg-preview.png",
     (110, 150),
     (screen_width / 2  - 640, screen_height / 2  + 180)
 )
