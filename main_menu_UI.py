@@ -22,7 +22,7 @@ main_title = font_main.render("Pacman", False, (255, 255, 0))
 # Creating font for buttons and the texts which will serve as buttons
 font_menu_buttons = pygame.font.Font("PressStart2P-Regular.ttf", 100)
 start_game = font_menu_buttons.render("New Game", False, (255, 255, 0))
-high_scores = font_menu_buttons.render("High sc res", False, (255, 255, 0))
+high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
 
 
 # Applying dimensions
@@ -31,24 +31,14 @@ main_title_box = main_title.get_rect(center = (screen_width / 2, screen_height /
 start_game_box = start_game.get_rect(center = (screen_width / 2, screen_height / 2 ))
 high_scores_box = high_scores.get_rect(center = (screen_width / 2, screen_height / 2 + 180))
 
+
 # Icons of pacman and ghosts
 pacman_icon = ImageElement(
     "pacman-removebg-preview.png", 
-    (120, 120), 
-    (screen_width / 2 + 195, screen_height / 2 + 180)
+    (150, 150), 
+    (screen_width / 2, 3 * screen_height / 4)
 )
 
-red_ghost_pacman = ImageElement(
-    "red_ghost-removebg-preview.png",
-    (150, 150),
-    (screen_width / 2 - 520, screen_height / 2)
-)
-
-orange_ghost = ImageElement(
-    "orange_ghost-removebg-preview.png",
-    (110, 150),
-    (screen_width / 2  - 640, screen_height / 2  + 180)
-)
 
 # Game loop
 running = True
@@ -69,8 +59,6 @@ while running:
     screen.blit(start_game, start_game_box)
     screen.blit(high_scores, high_scores_box)
     pacman_icon.draw(screen)
-    red_ghost_pacman.draw(screen)
-    orange_ghost.draw(screen)
     pygame.display.flip()
 
 # Quit pygame
