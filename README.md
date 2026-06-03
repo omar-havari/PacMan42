@@ -14,4 +14,6 @@ Kur ta lexosh ket keido bej kto:
 1. mkdir venvs
 2. python -m venv venvs/pygame_dependencies
 3. source venv/pygame_dependencies/bin/activate
-4. python main_menu_UI.py
+4. pip install --upgrade pip
+5. pip install pygame
+6. python main_menu_UI.py
