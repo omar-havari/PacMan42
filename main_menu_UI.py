@@ -11,8 +11,11 @@ screen_width = info.current_w
 screen_height = info.current_h
 
 # Pass the FULLSCREEN flag for true fullscreen
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+screen = pygame.display.set_mode(
+                            (screen_width, screen_height), pygame.FULLSCREEN
+                        )
 pygame.display.set_caption("Test")
+
 
 # Creating font for main title and main title text
 font_main = pygame.font.Font("PressStart2P-Regular.ttf", 300)
@@ -27,15 +30,25 @@ high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
 
 # Applying dimensions
 screen_width, screen_height = screen.get_size()
-main_title_box = main_title.get_rect(center = (screen_width / 2, screen_height / 2 - 500))
-start_game_box = start_game.get_rect(center = (screen_width / 2, screen_height / 2 ))
-high_scores_box = high_scores.get_rect(center = (screen_width / 2, screen_height / 2 + 180))
+main_title_box = main_title.get_rect(
+                                center=(
+                                    screen_width / 2, screen_height / 2 - 500
+                                )
+                            )
+start_game_box = start_game.get_rect(
+                                center=(screen_width / 2, screen_height / 2)
+                            )
+high_scores_box = high_scores.get_rect(
+                                center=(
+                                    screen_width / 2, screen_height / 2 + 180
+                                )
+                            )
 
 
 # Icons of pacman and ghosts
 pacman_icon = ImageElement(
-    "PacmanImages/pacman-removebg-preview.png", 
-    (150, 150), 
+    "PacmanImages/pacman-removebg-preview.png",
+    (150, 150),
     (screen_width / 2, 3 * screen_height / 4)
 )
 
@@ -48,11 +61,12 @@ while running:
             running = False
 
         # 3. BONUS: Add an ESCAPE key exit
-        # In full screen, the 'X' button disappears, so you need a keyboard shortcut to escape!
+        # In full screen, the 'X' button disappears
+        # We need ESC to quit
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-    
+
     # Drawing main title and buttons
     screen.fill((0, 0, 0))
     screen.blit(main_title, main_title_box)
