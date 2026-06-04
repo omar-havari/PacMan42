@@ -14,6 +14,7 @@ class GameDemo:
         self.x = self.screen.get_width() // 2  # Initializing x-position
         self.y = self.screen.get_height() // 2  # Initializing y-position
         self.speed = 7  # Speed of movement
+        self.direction = "right"  # Initial direction
 
     # Creating a run_demo function to make new window appear
     def run_demo(self):
@@ -33,12 +34,25 @@ class GameDemo:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
                 self.x = self.x - self.speed
+                self.direction = "left"
             if keys[pygame.K_RIGHT]:
                 self.x = self.x + self.speed
+                self.direction = "right"
             if keys[pygame.K_UP]:
                 self.y = self.y - self.speed
+                self.direction = "up"
             if keys[pygame.K_DOWN]:
                 self.y = self.y + self.speed
+                self.direction = "down"
+
+            if self.direction == "right":
+                rotated = self.pacman
+            elif self.direction == "left":
+                rotated = pygame.transform.rotate(self.pacman, 180)
+            elif self.direction == "up":
+                rotated = pygame.transform.rotate(self.pacman, 90)
+            elif self.direction == "down":
+                rotated = pygame.transform.rotate(self.pacman, 270)
 
             if self.x < 0 or self.x > self.screen.get_width():
                 print("Game over")
@@ -49,5 +63,5 @@ class GameDemo:
 
             # Drawing panel and redrawing pacman's position
             self.screen.fill((0, 0, 0))
-            self.screen.blit(self.pacman, (self.x, self.y))
+            self.screen.blit(rotated, (self.x, self.y))
             pygame.display.flip()
