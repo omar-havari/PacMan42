@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pacman_images import ImageElement
+from GameDemo import GameDemo
 
 # Initializing pygame
 pygame.init()
@@ -56,6 +57,14 @@ pacman_icon = ImageElement(
 # Game loop
 running = True
 while running:
+
+    mouse_pos = pygame.mouse.get_pos()
+
+    if start_game_box.collidepoint(mouse_pos) or high_scores_box.collidepoint(mouse_pos):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    else:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -65,7 +74,16 @@ while running:
         # We need ESC to quit
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                running = False
+                running = False        
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if start_game_box.collidepoint(event.pos):
+                GameDemo(screen).run_demo()
+            
+            if high_scores_box.collidepoint(event.pos):
+                print("Placeholder")
+        
+
 
     # Drawing main title and buttons
     screen.fill((0, 0, 0))
