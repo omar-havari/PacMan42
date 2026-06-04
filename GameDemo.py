@@ -1,4 +1,5 @@
 import pygame
+import time
 
 
 # Creating new class that will be placeholder for maze
@@ -20,7 +21,6 @@ class GameDemo:
     def run_demo(self):
         active = True
         while active is True:
-
             # Checking to quit game with X or ESC
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -54,11 +54,50 @@ class GameDemo:
             elif self.direction == "down":
                 rotated = pygame.transform.rotate(self.pacman, 270)
 
-            if self.x < 0 or self.x > self.screen.get_width():
-                print("Game over")
+            screen_width, screen_height = self.screen.get_size()
+
+            if (self.x < 0
+                    or self.x > self.screen.get_width()):
+                game_over_font = pygame.font.Font(
+                                                "PressStart2P-Regular.ttf", 300
+                                            )
+                game_over = game_over_font.render(
+                                                "Game Over",
+                                                False,
+                                                (255, 255, 0)
+                                            )
+                game_over_box = game_over.get_rect(
+                                                center=(
+                                                    screen_width / 2,
+                                                    screen_height / 2
+                                                )
+                                            )
+                self.screen.fill((0, 0, 0))
+                self.screen.blit(game_over, game_over_box)
+                pygame.mouse.set_visible(False)
+                pygame.display.flip()
+                time.sleep(4)
                 active = False
             if self.y < 0 or self.y > self.screen.get_height():
-                print("Game over")
+                game_over_font = pygame.font.Font(
+                                                "PressStart2P-Regular.ttf", 300
+                                            )
+                game_over = game_over_font.render(
+                                                "Game Over",
+                                                False,
+                                                (255, 255, 0)
+                                            )
+                game_over_box = game_over.get_rect(
+                                                center=(
+                                                    screen_width / 2,
+                                                    screen_height / 2
+                                                )
+                                            )
+                self.screen.fill((0, 0, 0))
+                self.screen.blit(game_over, game_over_box)
+                pygame.mouse.set_visible(False)
+                pygame.display.flip()
+                time.sleep(4)
                 active = False
 
             # Drawing panel and redrawing pacman's position

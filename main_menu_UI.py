@@ -58,6 +58,7 @@ pacman_icon = ImageElement(
 running = True
 while running:
 
+    pygame.mouse.set_visible(True)
     mouse_pos = pygame.mouse.get_pos()
     # Makes cursor look clickable when hovering over buttons
     if (start_game_box.collidepoint(mouse_pos)
