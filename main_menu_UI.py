@@ -13,8 +13,8 @@ screen_height = info.current_h
 
 # Pass the FULLSCREEN flag for true fullscreen
 screen = pygame.display.set_mode(
-                            (screen_width, screen_height), pygame.FULLSCREEN
-                        )
+    (screen_width, screen_height), pygame.FULLSCREEN
+)
 pygame.display.set_caption("Test")
 
 
@@ -32,18 +32,14 @@ high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
 # Applying dimensions
 screen_width, screen_height = screen.get_size()
 main_title_box = main_title.get_rect(
-                                center=(
-                                    screen_width / 2, screen_height / 2 - 500
-                                )
-                            )
+    center=(screen_width / 2, screen_height / 2 - 500)
+)
 start_game_box = start_game.get_rect(
-                                center=(screen_width / 2, screen_height / 2)
-                            )
+    center=(screen_width / 2, screen_height / 2)
+)
 high_scores_box = high_scores.get_rect(
-                                center=(
-                                    screen_width / 2, screen_height / 2 + 180
-                                )
-                            )
+    center=(screen_width / 2, screen_height / 2 + 180)
+)
 
 
 # Icons of pacman and ghosts
