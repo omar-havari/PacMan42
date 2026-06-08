@@ -20,6 +20,7 @@ class GameDemo:
     # Creating a run_demo function to make new window appear
     def run_demo(self):
         active = True
+        pygame.mouse.set_visible(False)
         while active is True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
