@@ -12,9 +12,21 @@ class GameDemo:
         self.pacman = pygame.transform.scale(  # Scales the image
             self.pacman, (150, 150)
         )
+        figure_paths=[
+             "PacmanImages/Screenshot_From_20260613_151344removebgpreview.png",
+            "PacmanImages/Screenshot_From_20260613_151358removebgpreview.png",
+            "PacmanImages/Screenshot_From_20260613_151712removebgpreview.png",
+        ]
+
+        self.frames=[
+            pygame.image.load(figure_paths[0]).convert_aplha(),
+            pygame.image.load(figure_paths[1]).convert_aplha(),
+            pygame.image.load(figure_paths[2]).convert_aplha(),                  
+        ]
+        self.current_frames
         self.x = self.screen.get_width() // 2  # Initializing x-position
         self.y = self.screen.get_height() // 2  # Initializing y-position
-        self.speed = 7  # Speed of movement
+        self.speed = 3  # Speed of movement
         self.direction = "right"  # Initial direction
 
     # Creating a run_demo function to make new window appear
