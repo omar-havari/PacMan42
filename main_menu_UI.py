@@ -44,7 +44,7 @@ high_scores_box = high_scores.get_rect(
 
 # Icons of pacman and ghosts
 pacman_icon = ImageElement(
-    "PacmanImages/pacman-removebg-preview.png",
+    "PacmanImages/Screenshot_From_2026-06-13_15-17-12-removebg-preview.png",
     (150, 150),
     (screen_width / 2, 3 * screen_height / 4)
 )
