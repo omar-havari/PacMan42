@@ -1,5 +1,8 @@
+import os
 import pygame
 import sys
+
+_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
 
 # Creating new class that will be placeholder for maze
@@ -23,9 +26,9 @@ class GameDemo:
         # *************ANIMATION SET-UP *****************
         # Load pacman images: open, half-open, closed
         figure_paths = [
-            "PacmanImages/Screenshot_From_2026-06-13_15-13-44-removebg-preview.png",
-            "PacmanImages/Screenshot_From_2026-06-13_15-13-58-removebg-preview.png",
-            "PacmanImages/Screenshot_From_2026-06-13_15-17-12-removebg-preview.png",
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-44-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-58-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-17-12-removebg-preview.png'),
         ]
 
         self.frames = [
@@ -123,7 +126,7 @@ class GameDemo:
         screen_width, screen_height = self.screen.get_size()
 
         if self.game_over_time:
-            game_over_font = self.load_path("PressStart2P-Regular.ttf", 300)
+            game_over_font = self.load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300)
             game_over = game_over_font.render(
                 "Game Over",
                 False,

@@ -1,7 +1,10 @@
+import os
 import pygame
 import sys
 from pacman_images import ImageElement
 from GameDemo import GameDemo
+
+_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
 # Initializing pygame
 pygame.init()
@@ -28,7 +31,7 @@ def load_path(path,size):
 
 # Creating font for main title and main title text
 
-font_main = load_path("PressStart2P-Regular.ttf",300)
+font_main = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300)
 
 
 
@@ -36,7 +39,7 @@ main_title = font_main.render("Pacman", False, (255, 255, 0))
 
 
 # Creating font for buttons and the texts which will serve as buttons
-font_menu_buttons = load_path("PressStart2P-Regular.ttf",300)
+font_menu_buttons = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300)
 start_game = font_menu_buttons.render("New Game", False, (255, 255, 0))
 high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
 
@@ -56,7 +59,7 @@ high_scores_box = high_scores.get_rect(
 
 # Icons of pacman and ghosts
 pacman_icon = ImageElement(
-    "PacmanImages/Screenshot_From_2026-06-13_15-17-12-removebg-preview.png",
+    os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-17-12-removebg-preview.png'),
     (150, 150),
     (screen_width / 2, 3 * screen_height / 4)
 )
