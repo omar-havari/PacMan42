@@ -17,14 +17,26 @@ screen = pygame.display.set_mode(
 )
 pygame.display.set_caption("Test")
 
+def load_path(path,size):
+    try:
+        return pygame.font.Font(path,size)
+    except FileNotFoundError:
+        print(f"Error: font file '{path}' not found. Cannot start the game.")
+        pygame.quit()
+        sys.exit(1)
+        
 
 # Creating font for main title and main title text
-font_main = pygame.font.Font("PressStart2P-Regular.ttf", 300)
+
+font_main = load_path("PressStart2P-Regular.ttf",300)
+
+
+
 main_title = font_main.render("Pacman", False, (255, 255, 0))
 
 
 # Creating font for buttons and the texts which will serve as buttons
-font_menu_buttons = pygame.font.Font("PressStart2P-Regular.ttf", 100)
+font_menu_buttons = load_path("PressStart2P-Regular.ttf",300)
 start_game = font_menu_buttons.render("New Game", False, (255, 255, 0))
 high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
 
