@@ -96,7 +96,7 @@ def run_main_menu(config):
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if start_game_box.collidepoint(event.pos):
-                        game = GameDemo(screen)
+                        game = GameDemo(screen, config)
                     if high_scores_box.collidepoint(event.pos):
                         print("Placeholder")
             screen.fill((0, 0, 0))
