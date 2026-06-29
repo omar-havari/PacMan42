@@ -1,2 +1,12 @@
 __pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+venv/
+.venv/
 venvs/
+*.egg-info/
+dist/
+build/
+*.spec
+highscores.json
