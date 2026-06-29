@@ -12,7 +12,7 @@ class Player:
         self.last_switch = pygame.time.get_ticks()
         self.x = self.screen.get_width() // 2  # Initializing x-position
         self.y = self.screen.get_height() // 2  # Initializing y-position
-        self.speed = 3  # Speed of movement
+        self.speed = 7  # Speed of movement
         self.lives = lives  # Number of lives
         self.direction = "right"  # Initial direction
         self.game_over_time = None
@@ -103,11 +103,13 @@ class Player:
 
         # --- detect game over (x out of bounds) ---
         if self.x < 0 or self.x > screen_width:
-            self.lose_life()
+            if self.game_over_time is None:
+                self.lose_life()
 
         # --- detect game over (y out of bounds) ---
         if self.y < 0 or self.y > screen_height:
-            self.lose_life()
+            if self.game_over_time is None:
+                self.lose_life()
 
         # --- has the 4-second game-over screen finished showing? ---
         if self.game_over_time and pygame.time.get_ticks() - self.game_over_time >= 4000:
@@ -137,8 +139,10 @@ class Player:
         else:
             self.screen.fill((0, 0, 0))
             self.screen.blit(self.rotated, (self.x, self.y))
-    
-    def lose_life():
+
+        pygame.display.flip()
+
+    def lose_life(self):
         self.lives -= 1
         if self.lives <= 0:
             self.game_over_time = pygame.time.get_ticks()
