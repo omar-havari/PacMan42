@@ -8,6 +8,7 @@ screen = pygame.display.set_mode((800, 600))
 maze = MazeLoader()
 grid = maze.generate(15,15,42)
 
+
 screen.fill((0,0,0))
 
 maze.draw(screen, grid )
