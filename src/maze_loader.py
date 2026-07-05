@@ -34,20 +34,58 @@ class MazeLoader:
 
 
 
+    WALL_COLOR = (33, 33, 255)
+    BG_COLOR = (0, 0, 0)
+
     def draw(self, screen, grid):
+        rows = len(grid)
+        cols = len(grid[0])
         screen_width = screen.get_width()
         screen_height = screen.get_height()
-        cell_width = screen_width // len(grid[0])
-        cell_height = screen_height // len(grid)
 
-        screen.fill((0, 0, 0))
+        # Square cells so the maze isn't stretched, centred with a letterbox.
+        cell = min(screen_width // cols, screen_height // rows)
+        offset_x = (screen_width - cell * cols) // 2
+        offset_y = (screen_height - cell * rows) // 2
 
-        for row_index, row in enumerate(grid):
-            for col_index, cell in enumerate(row):
-                x = col_index * cell_width
-                y = row_index * cell_height
-                if cell == "WALL":
-                    pygame.draw.rect(screen, (33, 33, 255), (x, y, cell_width, cell_height))
-                elif cell == "CORRIDOR":
-                    pygame.draw.rect(screen, (0, 0, 40), (x, y, cell_width, cell_height))
+        # Thickness of the blue "tube" outline. Thinner walls => wider corridors.
+        border = max(2, cell // 4)
+
+        screen.fill(self.BG_COLOR)
+
+        def is_wall(r, c):
+            return 0 <= r < rows and 0 <= c < cols and grid[r][c] == "WALL"
+
+        # Pass 1: fill every wall cell solid blue.
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] != "WALL":
+                    continue
+                x = offset_x + c * cell
+                y = offset_y + r * cell
+                pygame.draw.rect(screen, self.WALL_COLOR, (x, y, cell, cell))
+
+        # Pass 2: carve a black channel through the middle of each wall cell,
+        # extended toward any neighbouring wall so the channels join up. What's
+        # left is a thin, continuous blue outline: the classic Pac-Man look.
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] != "WALL":
+                    continue
+                x = offset_x + c * cell
+                y = offset_y + r * cell
+                ix, iy = x + border, y + border
+                iw = ih = cell - 2 * border
+                if is_wall(r, c - 1):
+                    ix -= border
+                    iw += border
+                if is_wall(r, c + 1):
+                    iw += border
+                if is_wall(r - 1, c):
+                    iy -= border
+                    ih += border
+                if is_wall(r + 1, c):
+                    ih += border
+                if iw > 0 and ih > 0:
+                    pygame.draw.rect(screen, self.BG_COLOR, (ix, iy, iw, ih))
     
