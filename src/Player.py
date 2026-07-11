@@ -25,9 +25,9 @@ class Player:
         # *************ANIMATION SET-UP *****************
         # Load pacman images: open, half-open, closed
         figure_paths = [
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-44-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-58-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-17-12-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-14-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-23-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-34-removebg-preview.png'),
         ]
 
         self.frames = [
@@ -90,18 +90,17 @@ class Player:
         # branches, since draw() needs to read it after update() finishes.
         if self.direction == "right":
             self.x += self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 180)
+            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 0)
         elif self.direction == "left":
             self.x -= self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 360)
+            self.rotated = pygame.transform.flip(self.frames[self.current_frame], True, False)
         elif self.direction == "up":
             self.y -= self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 270)
+            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 90)
         elif self.direction == "down":
             self.y += self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 90)
-
-        # --- detect game over (x out of bounds) ---
+            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 270)
+                # --- detect game over (x out of bounds) ---
         if self.x < 0 or self.x > screen_width:
             self.lose_life()
 
@@ -138,7 +137,7 @@ class Player:
             self.screen.fill((0, 0, 0))
             self.screen.blit(self.rotated, (self.x, self.y))
     
-    def lose_life():
+    def lose_life(self):
         self.lives -= 1
         if self.lives <= 0:
             self.game_over_time = pygame.time.get_ticks()
