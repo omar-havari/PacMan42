@@ -4,9 +4,6 @@ class MazeLoader:
 
 
     def generate(self, width, height, seed) -> list[list[str]] | None:
-        i=0
-        j=0
-        
         extended_maze = [["WALL" for _ in range(width*2+1)]for _ in range(height*2+1)]
 
         try:
@@ -15,8 +12,29 @@ class MazeLoader:
             print(f"Error generating maze: {e}")
             return None
 
-        for row in maze.maze:
-            for cell in row:
+        # The generator hides a "42" in the middle of every maze: those
+        # cells keep the value 15 (walled on ALL four sides) and are never
+        # visited, so 15 is a unique marker for "this cell is part of the
+        # 42". They become their own wall type, FT_WALL:
+        #   - drawn in a different colour than normal walls,
+        #   - still solid for the player (anything != CORRIDOR blocks),
+        #   - and NOT corridors. This also fixes a real bug: before, their
+        #     centres were marked CORRIDOR, so pacgums were placed inside
+        #     the sealed "42" where pacman could never eat them - which
+        #     made every level impossible to finish.
+        cells = maze.maze
+        for i, row in enumerate(cells):
+            for j, cell in enumerate(row):
+                if cell == 15:
+                    extended_maze[i*2+1][j*2+1] = "FT_WALL"
+                    # Also paint the edge cell between two neighbouring
+                    # "42" cells, so the digits show as connected strokes
+                    # instead of a grid of separate dots.
+                    if j + 1 < len(row) and row[j + 1] == 15:
+                        extended_maze[i*2+1][j*2+2] = "FT_WALL"
+                    if i + 1 < len(cells) and cells[i + 1][j] == 15:
+                        extended_maze[i*2+2][j*2+1] = "FT_WALL"
+                    continue
                 extended_maze[i*2+1][j*2+1] = "CORRIDOR"
                 if cell & 1 == 0:
                     extended_maze[i*2][j*2+1] = "CORRIDOR"
@@ -26,18 +44,21 @@ class MazeLoader:
                     extended_maze[i*2+2][j*2+1] = "CORRIDOR"
                 if cell & 8 == 0:
                     extended_maze[i*2+1][j*2] = "CORRIDOR"
-                j+=1
-            j=0
-            i+=1
         return extended_maze
 
 
 
 
     WALL_COLOR = (33, 33, 255)
+    FT_COLOR = (255, 0, 255)  # magenta for the "42" hidden in the maze
     BG_COLOR = (0, 0, 0)
 
-    def draw(self, screen, grid):
+    # NEW (Phase 4): the cell size and letterbox offsets used to be locals
+    # inside draw(). Now that the player and the pacgums also need to know
+    # exactly where each cell sits on screen, the math lives in ONE method
+    # everybody calls - so the drawing and the collision logic can never
+    # disagree about the geometry.
+    def get_layout(self, screen, grid):
         rows = len(grid)
         cols = len(grid[0])
         screen_width = screen.get_width()
@@ -47,6 +68,12 @@ class MazeLoader:
         cell = min(screen_width // cols, screen_height // rows)
         offset_x = (screen_width - cell * cols) // 2
         offset_y = (screen_height - cell * rows) // 2
+        return cell, offset_x, offset_y
+
+    def draw(self, screen, grid):
+        rows = len(grid)
+        cols = len(grid[0])
+        cell, offset_x, offset_y = self.get_layout(screen, grid)
 
         # Thickness of the blue "tube" outline. Thinner walls => wider corridors.
         border = max(2, cell // 4)
@@ -56,14 +83,18 @@ class MazeLoader:
         def is_wall(r, c):
             return 0 <= r < rows and 0 <= c < cols and grid[r][c] == "WALL"
 
-        # Pass 1: fill every wall cell solid blue.
+        # Pass 1: fill every wall cell solid blue - and the "42" cells
+        # solid magenta. FT_WALL is deliberately NOT hollowed out by pass 2
+        # below, so the 42 stays a bold filled shape that stands out from
+        # the outlined blue walls around it.
         for r in range(rows):
             for c in range(cols):
-                if grid[r][c] != "WALL":
-                    continue
                 x = offset_x + c * cell
                 y = offset_y + r * cell
-                pygame.draw.rect(screen, self.WALL_COLOR, (x, y, cell, cell))
+                if grid[r][c] == "FT_WALL":
+                    pygame.draw.rect(screen, self.FT_COLOR, (x, y, cell, cell))
+                elif grid[r][c] == "WALL":
+                    pygame.draw.rect(screen, self.WALL_COLOR, (x, y, cell, cell))
 
         # Pass 2: carve a black channel through the middle of each wall cell,
         # extended toward any neighbouring wall so the channels join up. What's
