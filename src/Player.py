@@ -2,18 +2,9 @@ import sys
 import pygame
 import os
 
-_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
+from src.movement import _DIRECTIONS, _OPPOSITE
 
-# Each direction as a (dx, dy) step in GRID cells. Turning a direction name
-# into actual movement is now a dictionary lookup instead of 4 if/elif
-# branches repeated in every function that needs it.
-_DIRECTIONS = {
-    "right": (1, 0),
-    "left": (-1, 0),
-    "up": (0, -1),
-    "down": (0, 1),
-}
-_OPPOSITE = {"right": "left", "left": "right", "up": "down", "down": "up"}
+_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
 
 class Player:
