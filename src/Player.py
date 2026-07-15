@@ -22,12 +22,6 @@ class Player:
 
         self.current_frame = 0
         self.last_switch = pygame.time.get_ticks()
-<<<<<<< HEAD
-        self.x = self.screen.get_width() // 2  # Initializing x-position
-        self.y = self.screen.get_height() // 2  # Initializing y-position
-        self.speed = 7  # Speed of movement
-=======
->>>>>>> 62d89a1454534bd32bcd5c58bd7149d84a1e7dd0
         self.lives = lives  # Number of lives
         self.game_over_time = None
 
@@ -130,9 +124,6 @@ class Player:
                 self.wanted_direction = "down"
 
     def update(self):
-<<<<<<< HEAD
-=======
->>>>>>> 62d89a1454534bd32bcd5c58bd7149d84a1e7dd0
         # --- has the 4-second game-over screen finished showing? ---
         # While the game-over screen is up, nothing else should move.
         if self.game_over_time:
@@ -209,9 +200,6 @@ class Player:
         else:
             self.screen.blit(self.rotated, (self.x, self.y))
 
-<<<<<<< HEAD
-=======
->>>>>>> 62d89a1454534bd32bcd5c58bd7149d84a1e7dd0
     def lose_life(self):
         self.lives -= 1
         if self.lives <= 0:
