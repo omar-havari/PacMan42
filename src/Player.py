@@ -2,32 +2,54 @@ import sys
 import pygame
 import os
 
+from src.movement import _DIRECTIONS, _OPPOSITE
+
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
+
 class Player:
-    def __init__(self, screen, lives):
+    # CHANGED (Phase 4 prerequisite = Tasks 3.2/3.3): the player now lives
+    # INSIDE the maze. It receives the grid plus the layout numbers
+    # (cell size and letterbox offsets) from MazeLoader.get_layout(), so
+    # its pixel position always lines up with the walls drawn on screen.
+    def __init__(self, screen, lives, grid, cell, offset_x, offset_y):
 
         self.screen = screen
+        self.grid = grid
+        self.cell = cell
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+
         self.current_frame = 0
         self.last_switch = pygame.time.get_ticks()
-        self.x = self.screen.get_width() // 2  # Initializing x-position
-        self.y = self.screen.get_height() // 2  # Initializing y-position
-        self.speed = 3  # Speed of movement
         self.lives = lives  # Number of lives
-        self.direction = "right"  # Initial direction
         self.game_over_time = None
-        # NEW: self.rotated will hold the current rotated/animated frame.
-        # update() sets it, draw() reads it. It must live on self because
-        # update() and draw() are now two separate calls instead of one
-        # big loop, so a local variable wouldn't survive between them.
-        self.rotated = None
+
+        # Movement is CELL-SNAPPED: pacman travels from cell centre to cell
+        # centre. "direction" is where he is going right now,
+        # "wanted_direction" is the last arrow key pressed. The wanted turn
+        # is applied the moment he is aligned with the grid AND the target
+        # cell is a corridor - exactly like the arcade game, where you can
+        # press "up" early and pacman turns at the next junction.
+        self.direction = None
+        self.wanted_direction = None
+
+        # The speed must divide the cell size evenly. If it didn't, pacman
+        # would step OVER the exact alignment point between two cells and
+        # the "am I aligned?" check below would never be true again, so he
+        # could never turn or be stopped by a wall.
+        self.speed = 1
+        for candidate in range(max(1, cell // 6), 0, -1):
+            if cell % candidate == 0:
+                self.speed = candidate
+                break
 
         # *************ANIMATION SET-UP *****************
         # Load pacman images: open, half-open, closed
         figure_paths = [
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-44-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-13-58-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-17-12-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-14-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-23-removebg-preview.png'),
+            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-34-removebg-preview.png'),
         ]
 
         self.frames = [
@@ -35,11 +57,47 @@ class Player:
             pygame.image.load(figure_paths[1]).convert_alpha(),
             pygame.image.load(figure_paths[2]).convert_alpha(),
         ]
-        # Scaling the pictures/frames
+        # CHANGED: frames are scaled to the maze cell size instead of a
+        # fixed 150x150, so pacman fits inside a corridor at any resolution.
         self.frames = [
-            pygame.transform.scale(frame, (150, 150))
+            pygame.transform.scale(frame, (self.cell, self.cell))
             for frame in self.frames
         ]
+
+        self.respawn()
+
+    # NEW (Task 3.3): spawn/respawn in the middle of the maze. The expanded
+    # grid always has odd dimensions and every odd row/column index is a
+    # corridor, so the exact centre cell is guaranteed to be walkable.
+    def respawn(self):
+        row = len(self.grid) // 2
+        col = len(self.grid[0]) // 2
+        self.x = self.offset_x + col * self.cell
+        self.y = self.offset_y + row * self.cell
+        self.direction = None
+        self.wanted_direction = None
+        self.rotated = self.frames[self.current_frame]
+
+    # NEW: pixel position -> grid cell. Uses the CENTRE of the sprite so
+    # the answer doesn't flip early while pacman is between two cells.
+    # GameDemo also calls this every frame to know which pacgum to eat.
+    def current_cell(self):
+        row = (self.y + self.cell // 2 - self.offset_y) // self.cell
+        col = (self.x + self.cell // 2 - self.offset_x) // self.cell
+        return (row, col)
+
+    # NEW (Task 3.2): "can pacman leave his current cell in that direction?"
+    # This is the whole wall-collision system - movement only ever starts
+    # toward a neighbouring CORRIDOR cell, so walls are simply never entered.
+    def _can_go(self, direction):
+        dx, dy = _DIRECTIONS[direction]
+        row, col = self.current_cell()
+        r, c = row + dy, col + dx
+        return (
+            0 <= r < len(self.grid)
+            and 0 <= c < len(self.grid[0])
+            and self.grid[r][c] == "CORRIDOR"
+        )
 
     # NEW: small helper so we don't repeat the same try/except every time
     # we need to load a font. Added "self" since it's a method now.
@@ -51,74 +109,79 @@ class Player:
             pygame.quit()
             sys.exit(1)
 
-    # REPLACED run_demo's event-handling block.
-    # This used to be the "for event in pygame.event.get():" section
-    # inside run_demo's while loop. Now it reacts to ONE event at a time,
-    # passed in by the outer loop (which we build next in main_menu_UI.py).
+    # CHANGED: arrow keys no longer change direction instantly - they only
+    # record the WISH. update() decides when the turn actually happens
+    # (next time pacman is aligned with the grid and the way is free).
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                self.direction = "left"
+                self.wanted_direction = "left"
             elif event.key == pygame.K_RIGHT:
-                self.direction = "right"
+                self.wanted_direction = "right"
             elif event.key == pygame.K_UP:
-                self.direction = "up"
+                self.wanted_direction = "up"
             elif event.key == pygame.K_DOWN:
-                self.direction = "down"
-            # NOTE: K_ESCAPE used to set active = False here.
-            # That variable doesn't exist anymore. ESC handling now
-            # belongs to the OUTER loop (it decides whether to quit
-            # the whole program or just return to the menu), not here.
+                self.wanted_direction = "down"
 
-    # REPLACED run_demo's movement/animation/game-over-detection logic.
-    # This is everything that used to decide "what should change this
-    # frame" - no drawing, no event handling, just calculations.
     def update(self):
-        # FIX: moved this to the TOP of the function. Before, screen_width
-        # was being used in the "if self.x < 0..." check BEFORE it was
-        # ever calculated - that would have crashed.
-        screen_width, screen_height = self.screen.get_size()
-
-        # --- animation timer: switch mouth frame every 150ms ---
-        now = pygame.time.get_ticks()
-        if now - self.last_switch >= 150:
-            self.current_frame = (self.current_frame + 1) % 3
-            self.last_switch = now
-
-        # --- movement + pick the correct rotated frame ---
-        # FIX: changed "rotated = ..." to "self.rotated = ..." in all 4
-        # branches, since draw() needs to read it after update() finishes.
-        if self.direction == "right":
-            self.x += self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 180)
-        elif self.direction == "left":
-            self.x -= self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 360)
-        elif self.direction == "up":
-            self.y -= self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 270)
-        elif self.direction == "down":
-            self.y += self.speed
-            self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 90)
-
-        # --- detect game over (x out of bounds) ---
-        if self.x < 0 or self.x > screen_width:
-            self.lose_life()
-
-        # --- detect game over (y out of bounds) ---
-        if self.y < 0 or self.y > screen_height:
-            self.lose_life()
-
         # --- has the 4-second game-over screen finished showing? ---
-        if self.game_over_time and pygame.time.get_ticks() - self.game_over_time >= 4000:
-            return True   # tell the outer loop: game is done
+        # While the game-over screen is up, nothing else should move.
+        if self.game_over_time:
+            return pygame.time.get_ticks() - self.game_over_time >= 4000
+
+        # A 180° turn is always allowed, even in the middle of a corridor -
+        # the cell behind pacman is the one he just came from, so it must
+        # be free. Every OTHER turn has to wait for grid alignment below.
+        if (
+            self.direction
+            and self.wanted_direction == _OPPOSITE[self.direction]
+        ):
+            self.direction = self.wanted_direction
+
+        # "Aligned" = pixel position sits exactly on a cell boundary. This
+        # is the only moment a turn or a wall-stop can happen, which is what
+        # keeps pacman perfectly centred in the corridors.
+        aligned = (
+            (self.x - self.offset_x) % self.cell == 0
+            and (self.y - self.offset_y) % self.cell == 0
+        )
+        if aligned:
+            if self.wanted_direction and self._can_go(self.wanted_direction):
+                self.direction = self.wanted_direction
+            if self.direction and not self._can_go(self.direction):
+                self.direction = None  # wall ahead: stop and wait
+
+        if self.direction:
+            dx, dy = _DIRECTIONS[self.direction]
+            self.x += dx * self.speed
+            self.y += dy * self.speed
+
+            # --- animation timer: switch mouth frame every 150ms ---
+            # Only animated while moving, so a stopped pacman doesn't chew air.
+            now = pygame.time.get_ticks()
+            if now - self.last_switch >= 150:
+                self.current_frame = (self.current_frame + 1) % 3
+                self.last_switch = now
+
+            # --- pick the correct rotated frame for the direction ---
+            if self.direction == "right":
+                self.rotated = self.frames[self.current_frame]
+            elif self.direction == "left":
+                self.rotated = pygame.transform.flip(self.frames[self.current_frame], True, False)
+            elif self.direction == "up":
+                self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 90)
+            elif self.direction == "down":
+                self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 270)
+
+        # NOTE: the old "out of screen bounds -> lose_life" checks are gone.
+        # The maze border is a solid ring of WALL cells, so leaving the
+        # screen is impossible now. Lives are lost to ghosts (Phase 5).
 
         return False      # still playing
 
-    # REPLACED run_demo's drawing logic.
-    # This is everything that used to put pixels on the screen - no
-    # decision-making here, it just looks at what update() already
-    # decided (self.game_over_time, self.rotated, self.x, self.y).
+    # CHANGED: draw() no longer fills the screen black - the maze is drawn
+    # first by GameDemo and fills the background itself. Pacman only blits
+    # his own sprite on top.
     def draw(self):
         screen_width, screen_height = self.screen.get_size()
 
@@ -135,13 +198,13 @@ class Player:
             self.screen.fill((0, 0, 0))
             self.screen.blit(game_over, game_over_box)
         else:
-            self.screen.fill((0, 0, 0))
             self.screen.blit(self.rotated, (self.x, self.y))
-    
-    def lose_life():
+
+    def lose_life(self):
         self.lives -= 1
         if self.lives <= 0:
             self.game_over_time = pygame.time.get_ticks()
         else:
-            self.x = self.screen.get_width() // 2
-            self.y = self.screen.get_height() // 2
+            # CHANGED (Task 3.3): respawn back at the maze centre instead
+            # of the raw screen centre (which could be inside a wall).
+            self.respawn()
