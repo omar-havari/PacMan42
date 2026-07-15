@@ -115,6 +115,18 @@ class GameDemo:
         fright_remaining = self.fright_until - pygame.time.get_ticks()
         self.ghosts.update(self.player.current_cell(), fright_remaining)
 
+        # --- Task 5.4: eating a frightened ghost ---
+        eaten_ghosts = self.ghosts.resolve_player_contact(self.player.current_cell())
+        self.score += eaten_ghosts * self.config.points_per_ghost
+
+        # --- Task 5.5: real ghost contact - only CHASE-state ghosts are
+        # dangerous, and the respawn invincibility window (Task 3.3) stops
+        # a single hit from chaining into an instant second death.
+        if not self.player.is_invincible() and self.ghosts.resolve_chase_contact(self.player.current_cell()):
+            self.player.lose_life()
+            if self.player.game_over_time:
+                return False  # game-over screen just triggered, skip the rest
+
         # --- Task 4.2: collection and scoring ---
         # Whatever cell pacman's centre is in, try to eat what's there.
         # Points only ever get ADDED, so the score can never decrease.
