@@ -1,53 +1,7 @@
 {
   "directed": false,
   "multigraph": false,
-  "graph": {
-    "hyperedges": [
-      {
-        "id": "maze_build_pipeline",
-        "label": "Number-to-tile maze build pipeline",
-        "nodes": [
-          "src_gamedemo",
-          "src_maze_loader",
-          "mazegenerator_mazegenerator",
-          "maze_build_phases_number_maze",
-          "maze_build_phases_tile_maze"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 0.9,
-        "source_file": "Maze_Code_Reference.md"
-      },
-      {
-        "id": "phase4_movement_system",
-        "label": "Cell-snapped movement system",
-        "nodes": [
-          "src_player",
-          "phase4_changes_cell_snapping",
-          "phase4_changes_wanted_direction",
-          "phase4_changes_two_coordinate_systems"
-        ],
-        "relation": "form",
-        "confidence": "EXTRACTED",
-        "confidence_score": 0.9,
-        "source_file": "Phase4_Changes.md"
-      },
-      {
-        "id": "ghost_reuse_plan",
-        "label": "Ghost reuse of player movement manager patterns",
-        "nodes": [
-          "src_ghost",
-          "src_player",
-          "src_movement",
-          "src_pacgums"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 0.85,
-        "source_file": "Phase5_Ghosts_Plan.md"
-      }
-    ]
-  },
+  "graph": {},
   "nodes": [
     {
       "label": "MainMenu.py",
@@ -55,9 +9,9 @@
       "source_file": "MainMenu.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "mainmenu",
-      "community": 15,
-      "norm_label": "mainmenu.py"
+      "community": 13,
+      "norm_label": "mainmenu.py",
+      "id": "mainmenu"
     },
     {
       "label": "__init__.py",
@@ -65,9 +19,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/__init__.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "mazegenerator_init",
-      "community": 2,
-      "norm_label": "__init__.py"
+      "community": 1,
+      "norm_label": "__init__.py",
+      "id": "mazegenerator_init"
     },
     {
       "label": "mazegenerator.py",
@@ -75,9 +29,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator",
-      "community": 2,
-      "norm_label": "mazegenerator.py"
+      "community": 1,
+      "norm_label": "mazegenerator.py",
+      "id": "mazegenerator_mazegenerator"
     },
     {
       "label": "MazeGenerator",
@@ -85,9 +39,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator",
       "community": 3,
-      "norm_label": "mazegenerator"
+      "norm_label": "mazegenerator",
+      "id": "mazegenerator_mazegenerator_mazegenerator"
     },
     {
       "label": ".__init__()",
@@ -95,9 +49,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_init",
       "community": 3,
-      "norm_label": ".__init__()"
+      "norm_label": ".__init__()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_init"
     },
     {
       "label": ".maze()",
@@ -105,9 +59,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_maze",
       "community": 3,
-      "norm_label": ".maze()"
+      "norm_label": ".maze()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_maze"
     },
     {
       "label": ".shortest_path()",
@@ -115,9 +69,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L35",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_shortest_path",
       "community": 3,
-      "norm_label": ".shortest_path()"
+      "norm_label": ".shortest_path()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_shortest_path"
     },
     {
       "label": ".maze_entry()",
@@ -125,9 +79,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L39",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_maze_entry",
       "community": 3,
-      "norm_label": ".maze_entry()"
+      "norm_label": ".maze_entry()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_maze_entry"
     },
     {
       "label": ".maze_exit()",
@@ -135,9 +89,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L43",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_maze_exit",
       "community": 3,
-      "norm_label": ".maze_exit()"
+      "norm_label": ".maze_exit()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_maze_exit"
     },
     {
       "label": ".generate()",
@@ -145,9 +99,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_generate",
       "community": 3,
-      "norm_label": ".generate()"
+      "norm_label": ".generate()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_generate"
     },
     {
       "label": "._create_empty_maze()",
@@ -155,9 +109,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L56",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze",
       "community": 3,
-      "norm_label": "._create_empty_maze()"
+      "norm_label": "._create_empty_maze()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze"
     },
     {
       "label": "._add_42_to_maze()",
@@ -165,9 +119,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L63",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze",
       "community": 3,
-      "norm_label": "._add_42_to_maze()"
+      "norm_label": "._add_42_to_maze()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze"
     },
     {
       "label": "._is_available()",
@@ -175,9 +129,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L85",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_is_available",
       "community": 3,
-      "norm_label": "._is_available()"
+      "norm_label": "._is_available()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_is_available"
     },
     {
       "label": "._get_neighbors()",
@@ -185,9 +139,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L93",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_get_neighbors",
       "community": 3,
-      "norm_label": "._get_neighbors()"
+      "norm_label": "._get_neighbors()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_get_neighbors"
     },
     {
       "label": "._generate_maze()",
@@ -195,9 +149,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L114",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_generate_maze",
       "community": 3,
-      "norm_label": "._generate_maze()"
+      "norm_label": "._generate_maze()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_generate_maze"
     },
     {
       "label": "._find_short_path()",
@@ -205,9 +159,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L124",
       "_origin": "ast",
-      "id": "mazegenerator_mazegenerator_mazegenerator_find_short_path",
       "community": 3,
-      "norm_label": "._find_short_path()"
+      "norm_label": "._find_short_path()",
+      "id": "mazegenerator_mazegenerator_mazegenerator_find_short_path"
     },
     {
       "label": "pac-man.py",
@@ -215,9 +169,9 @@
       "source_file": "pac-man.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pac_man",
-      "community": 8,
-      "norm_label": "pac-man.py"
+      "community": 4,
+      "norm_label": "pac-man.py",
+      "id": "pac_man"
     },
     {
       "label": "GameDemo.py",
@@ -225,9 +179,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_gamedemo",
       "community": 0,
-      "norm_label": "gamedemo.py"
+      "norm_label": "gamedemo.py",
+      "id": "src_gamedemo"
     },
     {
       "label": "GameDemo",
@@ -235,9 +189,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo",
-      "community": 1,
-      "norm_label": "gamedemo"
+      "community": 2,
+      "norm_label": "gamedemo",
+      "id": "src_gamedemo_gamedemo"
     },
     {
       "label": ".__init__()",
@@ -245,9 +199,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_init",
-      "community": 1,
-      "norm_label": ".__init__()"
+      "community": 2,
+      "norm_label": ".__init__()",
+      "id": "src_gamedemo_gamedemo_init"
     },
     {
       "label": "._load_font()",
@@ -255,9 +209,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L49",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_load_font",
-      "community": 1,
-      "norm_label": "._load_font()"
+      "community": 2,
+      "norm_label": "._load_font()",
+      "id": "src_gamedemo_gamedemo_load_font"
     },
     {
       "label": "._start_level()",
@@ -265,9 +219,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_start_level",
-      "community": 1,
-      "norm_label": "._start_level()"
+      "community": 2,
+      "norm_label": "._start_level()",
+      "id": "src_gamedemo_gamedemo_start_level"
     },
     {
       "label": ".handle_event()",
@@ -275,9 +229,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L88",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_handle_event",
-      "community": 1,
-      "norm_label": ".handle_event()"
+      "community": 2,
+      "norm_label": ".handle_event()",
+      "id": "src_gamedemo_gamedemo_handle_event"
     },
     {
       "label": ".update()",
@@ -285,9 +239,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L91",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_update",
-      "community": 1,
-      "norm_label": ".update()"
+      "community": 2,
+      "norm_label": ".update()",
+      "id": "src_gamedemo_gamedemo_update"
     },
     {
       "label": ".draw()",
@@ -295,9 +249,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L130",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_draw",
-      "community": 1,
-      "norm_label": ".draw()"
+      "community": 2,
+      "norm_label": ".draw()",
+      "id": "src_gamedemo_gamedemo_draw"
     },
     {
       "label": "._draw_center_text()",
@@ -305,9 +259,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L158",
       "_origin": "ast",
-      "id": "src_gamedemo_gamedemo_draw_center_text",
-      "community": 1,
-      "norm_label": "._draw_center_text()"
+      "community": 2,
+      "norm_label": "._draw_center_text()",
+      "id": "src_gamedemo_gamedemo_draw_center_text"
     },
     {
       "label": "Player.py",
@@ -315,9 +269,9 @@
       "source_file": "src/Player.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_player",
       "community": 0,
-      "norm_label": "player.py"
+      "norm_label": "player.py",
+      "id": "src_player"
     },
     {
       "label": "Player",
@@ -325,9 +279,9 @@
       "source_file": "src/Player.py",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_player_player",
-      "community": 5,
-      "norm_label": "player"
+      "community": 6,
+      "norm_label": "player",
+      "id": "src_player_player"
     },
     {
       "label": ".__init__()",
@@ -335,9 +289,9 @@
       "source_file": "src/Player.py",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "src_player_player_init",
-      "community": 5,
-      "norm_label": ".__init__()"
+      "community": 6,
+      "norm_label": ".__init__()",
+      "id": "src_player_player_init"
     },
     {
       "label": ".respawn()",
@@ -345,9 +299,9 @@
       "source_file": "src/Player.py",
       "source_location": "L72",
       "_origin": "ast",
-      "id": "src_player_player_respawn",
-      "community": 5,
-      "norm_label": ".respawn()"
+      "community": 6,
+      "norm_label": ".respawn()",
+      "id": "src_player_player_respawn"
     },
     {
       "label": ".current_cell()",
@@ -355,9 +309,9 @@
       "source_file": "src/Player.py",
       "source_location": "L84",
       "_origin": "ast",
-      "id": "src_player_player_current_cell",
-      "community": 5,
-      "norm_label": ".current_cell()"
+      "community": 6,
+      "norm_label": ".current_cell()",
+      "id": "src_player_player_current_cell"
     },
     {
       "label": "._can_go()",
@@ -365,9 +319,9 @@
       "source_file": "src/Player.py",
       "source_location": "L92",
       "_origin": "ast",
-      "id": "src_player_player_can_go",
-      "community": 5,
-      "norm_label": "._can_go()"
+      "community": 6,
+      "norm_label": "._can_go()",
+      "id": "src_player_player_can_go"
     },
     {
       "label": ".load_path()",
@@ -375,9 +329,9 @@
       "source_file": "src/Player.py",
       "source_location": "L104",
       "_origin": "ast",
-      "id": "src_player_player_load_path",
-      "community": 5,
-      "norm_label": ".load_path()"
+      "community": 6,
+      "norm_label": ".load_path()",
+      "id": "src_player_player_load_path"
     },
     {
       "label": ".handle_event()",
@@ -385,9 +339,9 @@
       "source_file": "src/Player.py",
       "source_location": "L115",
       "_origin": "ast",
-      "id": "src_player_player_handle_event",
-      "community": 5,
-      "norm_label": ".handle_event()"
+      "community": 6,
+      "norm_label": ".handle_event()",
+      "id": "src_player_player_handle_event"
     },
     {
       "label": ".update()",
@@ -395,9 +349,9 @@
       "source_file": "src/Player.py",
       "source_location": "L126",
       "_origin": "ast",
-      "id": "src_player_player_update",
-      "community": 5,
-      "norm_label": ".update()"
+      "community": 6,
+      "norm_label": ".update()",
+      "id": "src_player_player_update"
     },
     {
       "label": ".draw()",
@@ -405,9 +359,9 @@
       "source_file": "src/Player.py",
       "source_location": "L185",
       "_origin": "ast",
-      "id": "src_player_player_draw",
-      "community": 5,
-      "norm_label": ".draw()"
+      "community": 6,
+      "norm_label": ".draw()",
+      "id": "src_player_player_draw"
     },
     {
       "label": ".lose_life()",
@@ -415,9 +369,9 @@
       "source_file": "src/Player.py",
       "source_location": "L203",
       "_origin": "ast",
-      "id": "src_player_player_lose_life",
-      "community": 5,
-      "norm_label": ".lose_life()"
+      "community": 6,
+      "norm_label": ".lose_life()",
+      "id": "src_player_player_lose_life"
     },
     {
       "label": "# NOTE: the old \"out of screen bounds -> lose_life\" checks are gone.",
@@ -425,9 +379,9 @@
       "source_file": "src/Player.py",
       "source_location": "L176",
       "_origin": "ast",
-      "id": "src_player_rationale_176",
       "community": 0,
-      "norm_label": "# note: the old \"out of screen bounds -> lose_life\" checks are gone."
+      "norm_label": "# note: the old \"out of screen bounds -> lose_life\" checks are gone.",
+      "id": "src_player_rationale_176"
     },
     {
       "label": "config.py",
@@ -435,9 +389,9 @@
       "source_file": "src/config.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_config",
-      "community": 8,
-      "norm_label": "config.py"
+      "community": 4,
+      "norm_label": "config.py",
+      "id": "src_config"
     },
     {
       "label": "Config",
@@ -445,9 +399,9 @@
       "source_file": "src/config.py",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "src_config_config",
-      "community": 8,
-      "norm_label": "config"
+      "community": 4,
+      "norm_label": "config",
+      "id": "src_config_config"
     },
     {
       "label": ".__init__()",
@@ -455,9 +409,9 @@
       "source_file": "src/config.py",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "src_config_config_init",
-      "community": 8,
-      "norm_label": ".__init__()"
+      "community": 4,
+      "norm_label": ".__init__()",
+      "id": "src_config_config_init"
     },
     {
       "label": "._validate()",
@@ -465,9 +419,9 @@
       "source_file": "src/config.py",
       "source_location": "L33",
       "_origin": "ast",
-      "id": "src_config_config_validate",
-      "community": 8,
-      "norm_label": "._validate()"
+      "community": 4,
+      "norm_label": "._validate()",
+      "id": "src_config_config_validate"
     },
     {
       "label": "game_state.py",
@@ -475,9 +429,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_game_state",
-      "community": 4,
-      "norm_label": "game_state.py"
+      "community": 5,
+      "norm_label": "game_state.py",
+      "id": "src_game_state"
     },
     {
       "label": "GameState",
@@ -485,9 +439,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_game_state_gamestate",
-      "community": 4,
-      "norm_label": "gamestate"
+      "community": 5,
+      "norm_label": "gamestate",
+      "id": "src_game_state_gamestate"
     },
     {
       "label": ".switch_to()",
@@ -495,9 +449,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_switch_to",
-      "community": 4,
-      "norm_label": ".switch_to()"
+      "community": 5,
+      "norm_label": ".switch_to()",
+      "id": "src_game_state_gamestate_switch_to"
     },
     {
       "label": ".is_main_menu()",
@@ -505,9 +459,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_main_menu",
-      "community": 4,
-      "norm_label": ".is_main_menu()"
+      "community": 5,
+      "norm_label": ".is_main_menu()",
+      "id": "src_game_state_gamestate_is_main_menu"
     },
     {
       "label": ".is_game()",
@@ -515,9 +469,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_game",
-      "community": 4,
-      "norm_label": ".is_game()"
+      "community": 5,
+      "norm_label": ".is_game()",
+      "id": "src_game_state_gamestate_is_game"
     },
     {
       "label": ".is_pauseed()",
@@ -525,9 +479,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_pauseed",
-      "community": 4,
-      "norm_label": ".is_pauseed()"
+      "community": 5,
+      "norm_label": ".is_pauseed()",
+      "id": "src_game_state_gamestate_is_pauseed"
     },
     {
       "label": ".is_game_over()",
@@ -535,9 +489,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_game_over",
-      "community": 4,
-      "norm_label": ".is_game_over()"
+      "community": 5,
+      "norm_label": ".is_game_over()",
+      "id": "src_game_state_gamestate_is_game_over"
     },
     {
       "label": ".is_victory()",
@@ -545,9 +499,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_victory",
-      "community": 4,
-      "norm_label": ".is_victory()"
+      "community": 5,
+      "norm_label": ".is_victory()",
+      "id": "src_game_state_gamestate_is_victory"
     },
     {
       "label": ".is_highscores()",
@@ -555,9 +509,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_highscores",
-      "community": 4,
-      "norm_label": ".is_highscores()"
+      "community": 5,
+      "norm_label": ".is_highscores()",
+      "id": "src_game_state_gamestate_is_highscores"
     },
     {
       "label": ".is_instructions()",
@@ -565,49 +519,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "src_game_state_gamestate_is_instructions",
-      "community": 4,
-      "norm_label": ".is_instructions()"
-    },
-    {
-      "label": "ghost.py",
-      "file_type": "code",
-      "source_file": "src/ghost.py",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_ghost",
-      "community": 0,
-      "norm_label": "ghost.py"
-    },
-    {
-      "label": "Ghost",
-      "file_type": "code",
-      "source_file": "src/ghost.py",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "src_ghost_ghost",
-      "community": 6,
-      "norm_label": "ghost"
-    },
-    {
-      "label": ".__init__()",
-      "file_type": "code",
-      "source_file": "src/ghost.py",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "src_ghost_ghost_init",
-      "community": 6,
-      "norm_label": ".__init__()"
-    },
-    {
-      "label": ".update()",
-      "file_type": "code",
-      "source_file": "src/ghost.py",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "src_ghost_ghost_update",
-      "community": 6,
-      "norm_label": ".update()"
+      "community": 5,
+      "norm_label": ".is_instructions()",
+      "id": "src_game_state_gamestate_is_instructions"
     },
     {
       "label": "main_menu_UI.py",
@@ -615,9 +529,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_main_menu_ui",
-      "community": 1,
-      "norm_label": "main_menu_ui.py"
+      "community": 4,
+      "norm_label": "main_menu_ui.py",
+      "id": "src_main_menu_ui"
     },
     {
       "label": "load_path()",
@@ -625,9 +539,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_main_menu_ui_load_path",
-      "community": 1,
-      "norm_label": "load_path()"
+      "community": 4,
+      "norm_label": "load_path()",
+      "id": "src_main_menu_ui_load_path"
     },
     {
       "label": "run_main_menu()",
@@ -635,9 +549,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "src_main_menu_ui_run_main_menu",
-      "community": 1,
-      "norm_label": "run_main_menu()"
+      "community": 4,
+      "norm_label": "run_main_menu()",
+      "id": "src_main_menu_ui_run_main_menu"
     },
     {
       "label": "maze_loader.py",
@@ -645,9 +559,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_maze_loader",
-      "community": 2,
-      "norm_label": "maze_loader.py"
+      "community": 1,
+      "norm_label": "maze_loader.py",
+      "id": "src_maze_loader"
     },
     {
       "label": "MazeLoader",
@@ -655,9 +569,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "src_maze_loader_mazeloader",
-      "community": 2,
-      "norm_label": "mazeloader"
+      "community": 1,
+      "norm_label": "mazeloader",
+      "id": "src_maze_loader_mazeloader"
     },
     {
       "label": ".generate()",
@@ -665,9 +579,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "src_maze_loader_mazeloader_generate",
-      "community": 2,
-      "norm_label": ".generate()"
+      "community": 1,
+      "norm_label": ".generate()",
+      "id": "src_maze_loader_mazeloader_generate"
     },
     {
       "label": ".get_layout()",
@@ -675,9 +589,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L61",
       "_origin": "ast",
-      "id": "src_maze_loader_mazeloader_get_layout",
-      "community": 2,
-      "norm_label": ".get_layout()"
+      "community": 1,
+      "norm_label": ".get_layout()",
+      "id": "src_maze_loader_mazeloader_get_layout"
     },
     {
       "label": ".draw()",
@@ -685,9 +599,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L73",
       "_origin": "ast",
-      "id": "src_maze_loader_mazeloader_draw",
-      "community": 2,
-      "norm_label": ".draw()"
+      "community": 1,
+      "norm_label": ".draw()",
+      "id": "src_maze_loader_mazeloader_draw"
     },
     {
       "label": "movement.py",
@@ -695,9 +609,9 @@
       "source_file": "src/movement.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_movement",
-      "community": 6,
-      "norm_label": "movement.py"
+      "community": 7,
+      "norm_label": "movement.py",
+      "id": "src_movement"
     },
     {
       "label": "pixel_to_cell()",
@@ -705,9 +619,9 @@
       "source_file": "src/movement.py",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "src_movement_pixel_to_cell",
-      "community": 6,
-      "norm_label": "pixel_to_cell()"
+      "community": 7,
+      "norm_label": "pixel_to_cell()",
+      "id": "src_movement_pixel_to_cell"
     },
     {
       "label": "is_aligned()",
@@ -715,9 +629,9 @@
       "source_file": "src/movement.py",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "src_movement_is_aligned",
-      "community": 6,
-      "norm_label": "is_aligned()"
+      "community": 7,
+      "norm_label": "is_aligned()",
+      "id": "src_movement_is_aligned"
     },
     {
       "label": "can_go()",
@@ -725,9 +639,9 @@
       "source_file": "src/movement.py",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "src_movement_can_go",
-      "community": 6,
-      "norm_label": "can_go()"
+      "community": 7,
+      "norm_label": "can_go()",
+      "id": "src_movement_can_go"
     },
     {
       "label": "pick_speed()",
@@ -735,9 +649,9 @@
       "source_file": "src/movement.py",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "src_movement_pick_speed",
-      "community": 6,
-      "norm_label": "pick_speed()"
+      "community": 7,
+      "norm_label": "pick_speed()",
+      "id": "src_movement_pick_speed"
     },
     {
       "label": "pacgums.py",
@@ -745,9 +659,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_pacgums",
       "community": 0,
-      "norm_label": "pacgums.py"
+      "norm_label": "pacgums.py",
+      "id": "src_pacgums"
     },
     {
       "label": "PacgumManager",
@@ -755,9 +669,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager",
-      "community": 7,
-      "norm_label": "pacgummanager"
+      "community": 2,
+      "norm_label": "pacgummanager",
+      "id": "src_pacgums_pacgummanager"
     },
     {
       "label": ".__init__()",
@@ -765,9 +679,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager_init",
-      "community": 7,
-      "norm_label": ".__init__()"
+      "community": 2,
+      "norm_label": ".__init__()",
+      "id": "src_pacgums_pacgummanager_init"
     },
     {
       "label": "._load_sprite()",
@@ -775,9 +689,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager_load_sprite",
-      "community": 7,
-      "norm_label": "._load_sprite()"
+      "community": 2,
+      "norm_label": "._load_sprite()",
+      "id": "src_pacgums_pacgummanager_load_sprite"
     },
     {
       "label": ".remaining()",
@@ -785,9 +699,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L77",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager_remaining",
-      "community": 7,
-      "norm_label": ".remaining()"
+      "community": 2,
+      "norm_label": ".remaining()",
+      "id": "src_pacgums_pacgummanager_remaining"
     },
     {
       "label": ".collect()",
@@ -795,9 +709,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L83",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager_collect",
-      "community": 7,
-      "norm_label": ".collect()"
+      "community": 2,
+      "norm_label": ".collect()",
+      "id": "src_pacgums_pacgummanager_collect"
     },
     {
       "label": ".draw()",
@@ -805,9 +719,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L86",
       "_origin": "ast",
-      "id": "src_pacgums_pacgummanager_draw",
-      "community": 7,
-      "norm_label": ".draw()"
+      "community": 2,
+      "norm_label": ".draw()",
+      "id": "src_pacgums_pacgummanager_draw"
     },
     {
       "label": "pacman_images.py",
@@ -815,9 +729,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_pacman_images",
-      "community": 1,
-      "norm_label": "pacman_images.py"
+      "community": 4,
+      "norm_label": "pacman_images.py",
+      "id": "src_pacman_images"
     },
     {
       "label": "ImageElement",
@@ -825,9 +739,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "src_pacman_images_imageelement",
-      "community": 1,
-      "norm_label": "imageelement"
+      "community": 4,
+      "norm_label": "imageelement",
+      "id": "src_pacman_images_imageelement"
     },
     {
       "label": ".__init__()",
@@ -835,9 +749,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "src_pacman_images_imageelement_init",
-      "community": 1,
-      "norm_label": ".__init__()"
+      "community": 4,
+      "norm_label": ".__init__()",
+      "id": "src_pacman_images_imageelement_init"
     },
     {
       "label": ".draw()",
@@ -845,9 +759,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "src_pacman_images_imageelement_draw",
-      "community": 1,
-      "norm_label": ".draw()"
+      "community": 4,
+      "norm_label": ".draw()",
+      "id": "src_pacman_images_imageelement_draw"
     },
     {
       "label": "test_maze.py",
@@ -855,9 +769,9 @@
       "source_file": "test_maze.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_maze",
-      "community": 2,
-      "norm_label": "test_maze.py"
+      "community": 1,
+      "norm_label": "test_maze.py",
+      "id": "test_maze"
     },
     {
       "label": "ImageElement class",
@@ -868,9 +782,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "howeverythingworks_imageelement",
       "community": 0,
-      "norm_label": "imageelement class"
+      "norm_label": "imageelement class",
+      "id": "howeverythingworks_imageelement"
     },
     {
       "label": "main_menu_UI entry point",
@@ -881,9 +795,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "howeverythingworks_main_menu_ui",
       "community": 0,
-      "norm_label": "main_menu_ui entry point"
+      "norm_label": "main_menu_ui entry point",
+      "id": "howeverythingworks_main_menu_ui"
     },
     {
       "label": "Wall bitmask encoding 1-2-4-8",
@@ -894,9 +808,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "maze_build_phases_bitmask",
-      "community": 2,
-      "norm_label": "wall bitmask encoding 1-2-4-8"
+      "community": 1,
+      "norm_label": "wall bitmask encoding 1-2-4-8",
+      "id": "maze_build_phases_bitmask"
     },
     {
       "label": "Number maze grid of ints",
@@ -907,9 +821,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "maze_build_phases_number_maze",
-      "community": 2,
-      "norm_label": "number maze grid of ints"
+      "community": 1,
+      "norm_label": "number maze grid of ints",
+      "id": "maze_build_phases_number_maze"
     },
     {
       "label": "Tile maze WALL CORRIDOR grid",
@@ -920,9 +834,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "maze_build_phases_tile_maze",
-      "community": 2,
-      "norm_label": "tile maze wall corridor grid"
+      "community": 1,
+      "norm_label": "tile maze wall corridor grid",
+      "id": "maze_build_phases_tile_maze"
     },
     {
       "label": "FT_WALL hidden 42 logo",
@@ -933,9 +847,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "maze_build_phases_ft_wall",
-      "community": 2,
-      "norm_label": "ft_wall hidden 42 logo"
+      "community": 1,
+      "norm_label": "ft_wall hidden 42 logo",
+      "id": "maze_build_phases_ft_wall"
     },
     {
       "label": "Cell-snapped movement",
@@ -946,9 +860,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase4_changes_cell_snapping",
       "community": 0,
-      "norm_label": "cell-snapped movement"
+      "norm_label": "cell-snapped movement",
+      "id": "phase4_changes_cell_snapping"
     },
     {
       "label": "Grid vs pixel coordinate systems",
@@ -959,9 +873,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase4_changes_two_coordinate_systems",
       "community": 0,
-      "norm_label": "grid vs pixel coordinate systems"
+      "norm_label": "grid vs pixel coordinate systems",
+      "id": "phase4_changes_two_coordinate_systems"
     },
     {
       "label": "wanted_direction buffered turn wish",
@@ -972,9 +886,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase4_changes_wanted_direction",
       "community": 0,
-      "norm_label": "wanted_direction buffered turn wish"
+      "norm_label": "wanted_direction buffered turn wish",
+      "id": "phase4_changes_wanted_direction"
     },
     {
       "label": "get_layout geometry source of truth",
@@ -985,9 +899,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "maze_code_reference_get_layout",
       "community": 0,
-      "norm_label": "get_layout geometry source of truth"
+      "norm_label": "get_layout geometry source of truth",
+      "id": "maze_code_reference_get_layout"
     },
     {
       "label": "fright_until edible-ghost timer",
@@ -998,9 +912,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase4_changes_fright_until",
       "community": 0,
-      "norm_label": "fright_until edible-ghost timer"
+      "norm_label": "fright_until edible-ghost timer",
+      "id": "phase4_changes_fright_until"
     },
     {
       "label": "Unwinnable-levels pacgum-in-42 bug",
@@ -1011,9 +925,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase4_changes_unwinnable_bug",
-      "community": 2,
-      "norm_label": "unwinnable-levels pacgum-in-42 bug"
+      "community": 1,
+      "norm_label": "unwinnable-levels pacgum-in-42 bug",
+      "id": "phase4_changes_unwinnable_bug"
     },
     {
       "label": "Mouth animation frame timing",
@@ -1024,9 +938,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "howeverythingworks_frame_animation",
       "community": 0,
-      "norm_label": "mouth animation frame timing"
+      "norm_label": "mouth animation frame timing",
+      "id": "howeverythingworks_frame_animation"
     },
     {
       "label": "Shared movement extraction decision",
@@ -1037,9 +951,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase5_ghosts_plan_shared_movement",
-      "community": 6,
-      "norm_label": "shared movement extraction decision"
+      "community": 7,
+      "norm_label": "shared movement extraction decision",
+      "id": "phase5_ghosts_plan_shared_movement"
     },
     {
       "label": "Pygame dependency",
@@ -1050,9 +964,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "requirements_pygame",
       "community": 0,
-      "norm_label": "pygame dependency"
+      "norm_label": "pygame dependency",
+      "id": "requirements_pygame"
     },
     {
       "label": "PacMan42 README",
@@ -1063,9 +977,9 @@
       "captured_at": null,
       "author": "kbega, ohavari",
       "contributor": null,
-      "id": "readme",
       "community": 0,
-      "norm_label": "pacman42 readme"
+      "norm_label": "pacman42 readme",
+      "id": "readme"
     },
     {
       "label": "HowEverythingWorks build guide",
@@ -1076,9 +990,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "howeverythingworks",
       "community": 0,
-      "norm_label": "howeverythingworks build guide"
+      "norm_label": "howeverythingworks build guide",
+      "id": "howeverythingworks"
     },
     {
       "label": "Full Task Plan Phases 0-13",
@@ -1089,9 +1003,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "task_plan",
       "community": 0,
-      "norm_label": "full task plan phases 0-13"
+      "norm_label": "full task plan phases 0-13",
+      "id": "task_plan"
     },
     {
       "label": "Phase 5 Task 5.1 ghost plan",
@@ -1102,9 +1016,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "phase5_ghosts_plan",
       "community": 0,
-      "norm_label": "phase 5 task 5.1 ghost plan"
+      "norm_label": "phase 5 task 5.1 ghost plan",
+      "id": "phase5_ghosts_plan"
     },
     {
       "label": "42 PacMan subject PDF",
@@ -1115,9 +1029,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "en_subject_2",
       "community": 0,
-      "norm_label": "42 pacman subject pdf"
+      "norm_label": "42 pacman subject pdf",
+      "id": "en_subject_2"
     },
     {
       "label": "requirements.txt",
@@ -1128,9 +1042,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "requirements",
       "community": 0,
-      "norm_label": "requirements.txt"
+      "norm_label": "requirements.txt",
+      "id": "requirements"
     },
     {
       "label": "mazegenerator package top_level.txt",
@@ -1141,9 +1055,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "mazegenerator_2_0_2_dist_info_top_level",
-      "community": 2,
-      "norm_label": "mazegenerator package top_level.txt"
+      "community": 1,
+      "norm_label": "mazegenerator package top_level.txt",
+      "id": "mazegenerator_2_0_2_dist_info_top_level"
     },
     {
       "label": "Pixel-Art Cigarette Sprite",
@@ -1154,9 +1068,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_cigarette_sprite",
-      "community": 11,
-      "norm_label": "pixel-art cigarette sprite"
+      "community": 8,
+      "norm_label": "pixel-art cigarette sprite",
+      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_cigarette_sprite"
     },
     {
       "label": "Pac-Man Collectible Item",
@@ -1167,9 +1081,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_collectible_item",
-      "community": 11,
-      "norm_label": "pac-man collectible item"
+      "community": 8,
+      "norm_label": "pac-man collectible item",
+      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_collectible_item"
     },
     {
       "label": "PacMan42 Game Project",
@@ -1180,9 +1094,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_pacman_game",
-      "community": 11,
-      "norm_label": "pacman42 game project"
+      "community": 8,
+      "norm_label": "pacman42 game project",
+      "id": "images_chatgpt_image_jul_11_2026_03_31_12_pm_pacman_game"
     },
     {
       "label": "Blue Pac-Man Sprite with Cigarette",
@@ -1193,9 +1107,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_blue_pacman",
       "community": 9,
-      "norm_label": "blue pac-man sprite with cigarette"
+      "norm_label": "blue pac-man sprite with cigarette",
+      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_blue_pacman"
     },
     {
       "label": "Pac-Man Player Character",
@@ -1206,9 +1120,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_pacman_character",
       "community": 9,
-      "norm_label": "pac-man player character"
+      "norm_label": "pac-man player character",
+      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_pacman_character"
     },
     {
       "label": "Cigarette Detail",
@@ -1219,9 +1133,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_cigarette",
       "community": 9,
-      "norm_label": "cigarette detail"
+      "norm_label": "cigarette detail",
+      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_cigarette"
     },
     {
       "label": "Pixel Art Sprite Style",
@@ -1232,9 +1146,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_pixel_art_style",
       "community": 9,
-      "norm_label": "pixel art sprite style"
+      "norm_label": "pixel art sprite style",
+      "id": "images_screenshot_from_2026_07_10_12_31_14_removebg_preview_pixel_art_style"
     },
     {
       "label": "Blue Pac-Man Sprite",
@@ -1245,9 +1159,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_bluepacman",
-      "community": 12,
-      "norm_label": "blue pac-man sprite"
+      "community": 11,
+      "norm_label": "blue pac-man sprite",
+      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_bluepacman"
     },
     {
       "label": "Player Character",
@@ -1258,9 +1172,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_playercharacter",
-      "community": 12,
-      "norm_label": "player character"
+      "community": 11,
+      "norm_label": "player character",
+      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_playercharacter"
     },
     {
       "label": "Cigarette Detail",
@@ -1271,9 +1185,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_cigarette",
-      "community": 12,
-      "norm_label": "cigarette detail"
+      "community": 11,
+      "norm_label": "cigarette detail",
+      "id": "images_screenshot_from_2026_07_10_12_31_23_removebg_preview_cigarette"
     },
     {
       "label": "Blue Pac-Man Sprite with Cigarette",
@@ -1284,9 +1198,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_34_removebg_preview_blue_pacman",
-      "community": 14,
-      "norm_label": "blue pac-man sprite with cigarette"
+      "community": 12,
+      "norm_label": "blue pac-man sprite with cigarette",
+      "id": "images_screenshot_from_2026_07_10_12_31_34_removebg_preview_blue_pacman"
     },
     {
       "label": "Pac-Man Player Character",
@@ -1297,9 +1211,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_34_removebg_preview_pacman_character",
-      "community": 14,
-      "norm_label": "pac-man player character"
+      "community": 12,
+      "norm_label": "pac-man player character",
+      "id": "images_screenshot_from_2026_07_10_12_31_34_removebg_preview_pacman_character"
     },
     {
       "label": "Pac-Man Ghost Sprite (White Body, Blue Eyes)",
@@ -1310,9 +1224,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_31_49_removebg_preview_ghost_sprite",
       "community": 10,
-      "norm_label": "pac-man ghost sprite (white body, blue eyes)"
+      "norm_label": "pac-man ghost sprite (white body, blue eyes)",
+      "id": "images_screenshot_from_2026_07_10_12_31_49_removebg_preview_ghost_sprite"
     },
     {
       "label": "Pac-Man Ghost Enemy Character",
@@ -1323,9 +1237,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "concept_pacman_ghost_enemy",
       "community": 10,
-      "norm_label": "pac-man ghost enemy character"
+      "norm_label": "pac-man ghost enemy character",
+      "id": "concept_pacman_ghost_enemy"
     },
     {
       "label": "Ghost Frightened/Vulnerable State",
@@ -1336,22 +1250,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "concept_pacman_frightened_ghost_state",
       "community": 10,
-      "norm_label": "ghost frightened/vulnerable state"
-    },
-    {
-      "label": "Pixel-Art Cigarette Pack Sprite",
-      "file_type": "image",
-      "source_file": "assets/images/Screenshot_From_2026-07-10_12-32-10-removebg-preview.png",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_cigarette_pack_sprite",
-      "community": 13,
-      "norm_label": "pixel-art cigarette pack sprite"
+      "norm_label": "ghost frightened/vulnerable state",
+      "id": "concept_pacman_frightened_ghost_state"
     },
     {
       "label": "Collectible Power-Up Item Role",
@@ -1362,9 +1263,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_collectible_powerup",
-      "community": 13,
-      "norm_label": "collectible power-up item role"
+      "community": 8,
+      "norm_label": "collectible power-up item role",
+      "id": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_collectible_powerup"
     },
     {
       "label": "Super Pacgum / Power Pellet Equivalent",
@@ -1375,9 +1276,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_super_pacgum",
-      "community": 13,
-      "norm_label": "super pacgum / power pellet equivalent"
+      "community": 8,
+      "norm_label": "super pacgum / power pellet equivalent",
+      "id": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_super_pacgum"
     }
   ],
   "links": [
@@ -1388,9 +1289,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/__init__.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_init",
-      "target": "mazegenerator_mazegenerator",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator"
     },
     {
       "relation": "imports",
@@ -1399,9 +1300,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/__init__.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_init",
-      "target": "mazegenerator_mazegenerator_mazegenerator",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator"
     },
     {
       "relation": "references",
@@ -1449,9 +1350,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator"
     },
     {
       "relation": "imports_from",
@@ -1470,9 +1371,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze"
     },
     {
       "relation": "method",
@@ -1480,9 +1381,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze"
     },
     {
       "relation": "method",
@@ -1490,9 +1391,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_find_short_path",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_find_short_path"
     },
     {
       "relation": "method",
@@ -1500,9 +1401,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_generate"
     },
     {
       "relation": "method",
@@ -1510,9 +1411,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L114",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_generate_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_generate_maze"
     },
     {
       "relation": "method",
@@ -1520,9 +1421,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_get_neighbors",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_get_neighbors"
     },
     {
       "relation": "method",
@@ -1530,9 +1431,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_init",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_init"
     },
     {
       "relation": "method",
@@ -1540,9 +1441,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_is_available",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_is_available"
     },
     {
       "relation": "method",
@@ -1550,9 +1451,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_maze"
     },
     {
       "relation": "method",
@@ -1560,9 +1461,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_maze_entry",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_maze_entry"
     },
     {
       "relation": "method",
@@ -1570,9 +1471,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_maze_exit",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_maze_exit"
     },
     {
       "relation": "method",
@@ -1580,9 +1481,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator",
-      "target": "mazegenerator_mazegenerator_mazegenerator_shortest_path",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_shortest_path"
     },
     {
       "relation": "uses",
@@ -1590,9 +1491,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L1",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "src_maze_loader_mazeloader",
-      "target": "mazegenerator_mazegenerator_mazegenerator",
-      "confidence_score": 0.5
+      "target": "mazegenerator_mazegenerator_mazegenerator"
     },
     {
       "relation": "calls",
@@ -1612,9 +1513,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_init",
-      "target": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_generate"
     },
     {
       "relation": "calls",
@@ -1623,9 +1524,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "target": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_add_42_to_maze"
     },
     {
       "relation": "calls",
@@ -1634,9 +1535,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "target": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_create_empty_maze"
     },
     {
       "relation": "calls",
@@ -1645,9 +1546,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "target": "mazegenerator_mazegenerator_mazegenerator_find_short_path",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_find_short_path"
     },
     {
       "relation": "calls",
@@ -1656,9 +1557,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_generate",
-      "target": "mazegenerator_mazegenerator_mazegenerator_generate_maze",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_generate_maze"
     },
     {
       "relation": "calls",
@@ -1667,9 +1568,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L99",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_get_neighbors",
-      "target": "mazegenerator_mazegenerator_mazegenerator_is_available",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_is_available"
     },
     {
       "relation": "calls",
@@ -1678,9 +1579,9 @@
       "source_file": "mazegenerator-00001-py3-none-any/mazegenerator/mazegenerator.py",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "mazegenerator_mazegenerator_mazegenerator_generate_maze",
-      "target": "mazegenerator_mazegenerator_mazegenerator_get_neighbors",
-      "confidence_score": 1.0
+      "target": "mazegenerator_mazegenerator_mazegenerator_get_neighbors"
     },
     {
       "relation": "imports_from",
@@ -1689,9 +1590,9 @@
       "source_file": "pac-man.py",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pac_man",
-      "target": "src_config",
-      "confidence_score": 1.0
+      "target": "src_config"
     },
     {
       "relation": "imports",
@@ -1700,9 +1601,9 @@
       "source_file": "pac-man.py",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pac_man",
-      "target": "src_config_config",
-      "confidence_score": 1.0
+      "target": "src_config_config"
     },
     {
       "relation": "imports_from",
@@ -1711,9 +1612,9 @@
       "source_file": "pac-man.py",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pac_man",
-      "target": "src_main_menu_ui",
-      "confidence_score": 1.0
+      "target": "src_main_menu_ui"
     },
     {
       "relation": "imports",
@@ -1722,9 +1623,9 @@
       "source_file": "pac-man.py",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pac_man",
-      "target": "src_main_menu_ui_run_main_menu",
-      "confidence_score": 1.0
+      "target": "src_main_menu_ui_run_main_menu"
     },
     {
       "relation": "calls",
@@ -1782,9 +1683,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo",
-      "target": "src_gamedemo_gamedemo",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo"
     },
     {
       "relation": "imports_from",
@@ -1804,9 +1705,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo",
-      "target": "src_maze_loader_mazeloader",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader"
     },
     {
       "relation": "references",
@@ -1826,9 +1727,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo",
-      "target": "src_pacgums_pacgummanager",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager"
     },
     {
       "relation": "references",
@@ -1848,9 +1749,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo",
-      "target": "src_player_player",
-      "confidence_score": 1.0
+      "target": "src_player_player"
     },
     {
       "relation": "imports_from",
@@ -1859,9 +1760,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_gamedemo",
-      "confidence_score": 1.0
+      "target": "src_gamedemo"
     },
     {
       "relation": "references",
@@ -1879,9 +1780,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_draw",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_draw"
     },
     {
       "relation": "method",
@@ -1889,9 +1790,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L158",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_draw_center_text",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_draw_center_text"
     },
     {
       "relation": "method",
@@ -1899,9 +1800,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_handle_event",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_handle_event"
     },
     {
       "relation": "method",
@@ -1909,9 +1810,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_init",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_init"
     },
     {
       "relation": "method",
@@ -1919,9 +1820,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_load_font",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_load_font"
     },
     {
       "relation": "method",
@@ -1929,9 +1830,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_start_level",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_start_level"
     },
     {
       "relation": "method",
@@ -1939,9 +1840,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_gamedemo_gamedemo_update",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_update"
     },
     {
       "relation": "uses",
@@ -1949,9 +1850,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L8",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_maze_loader_mazeloader",
-      "confidence_score": 0.5
+      "target": "src_maze_loader_mazeloader"
     },
     {
       "relation": "uses",
@@ -1959,9 +1860,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L9",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_pacgums_pacgummanager",
-      "confidence_score": 0.5
+      "target": "src_pacgums_pacgummanager"
     },
     {
       "relation": "uses",
@@ -1969,9 +1870,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L7",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "src_gamedemo_gamedemo",
-      "target": "src_player_player",
-      "confidence_score": 0.5
+      "target": "src_player_player"
     },
     {
       "relation": "imports",
@@ -1980,9 +1881,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_gamedemo_gamedemo",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo"
     },
     {
       "relation": "calls",
@@ -1991,9 +1892,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui_run_main_menu",
-      "target": "src_gamedemo_gamedemo",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo"
     },
     {
       "relation": "calls",
@@ -2002,9 +1903,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo_init",
-      "target": "src_gamedemo_gamedemo_load_font",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_load_font"
     },
     {
       "relation": "calls",
@@ -2013,9 +1914,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo_init",
-      "target": "src_gamedemo_gamedemo_start_level",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_start_level"
     },
     {
       "relation": "calls",
@@ -2035,9 +1936,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L159",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo_draw_center_text",
-      "target": "src_gamedemo_gamedemo_load_font",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_load_font"
     },
     {
       "relation": "calls",
@@ -2068,9 +1969,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_gamedemo_gamedemo_update",
-      "target": "src_gamedemo_gamedemo_start_level",
-      "confidence_score": 1.0
+      "target": "src_gamedemo_gamedemo_start_level"
     },
     {
       "relation": "calls",
@@ -2079,19 +1980,9 @@
       "source_file": "src/GameDemo.py",
       "source_location": "L135",
       "weight": 1.0,
-      "source": "src_gamedemo_gamedemo_draw",
-      "target": "src_gamedemo_gamedemo_draw_center_text",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "Phase5_Ghosts_Plan.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "src_ghost",
-      "target": "src_player"
+      "source": "src_gamedemo_gamedemo_draw",
+      "target": "src_gamedemo_gamedemo_draw_center_text"
     },
     {
       "relation": "shares_data_with",
@@ -2150,9 +2041,9 @@
       "source_file": "src/Player.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player",
-      "target": "src_player_player",
-      "confidence_score": 1.0
+      "target": "src_player_player"
     },
     {
       "relation": "rationale_for",
@@ -2160,9 +2051,9 @@
       "source_file": "src/Player.py",
       "source_location": "L176",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_rationale_176",
-      "target": "src_player",
-      "confidence_score": 1.0
+      "target": "src_player"
     },
     {
       "relation": "references",
@@ -2180,9 +2071,9 @@
       "source_file": "src/Player.py",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_can_go",
-      "confidence_score": 1.0
+      "target": "src_player_player_can_go"
     },
     {
       "relation": "method",
@@ -2190,9 +2081,9 @@
       "source_file": "src/Player.py",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_current_cell",
-      "confidence_score": 1.0
+      "target": "src_player_player_current_cell"
     },
     {
       "relation": "method",
@@ -2200,9 +2091,9 @@
       "source_file": "src/Player.py",
       "source_location": "L185",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_draw",
-      "confidence_score": 1.0
+      "target": "src_player_player_draw"
     },
     {
       "relation": "method",
@@ -2210,9 +2101,9 @@
       "source_file": "src/Player.py",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_handle_event",
-      "confidence_score": 1.0
+      "target": "src_player_player_handle_event"
     },
     {
       "relation": "method",
@@ -2220,9 +2111,9 @@
       "source_file": "src/Player.py",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_init",
-      "confidence_score": 1.0
+      "target": "src_player_player_init"
     },
     {
       "relation": "method",
@@ -2230,9 +2121,9 @@
       "source_file": "src/Player.py",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_load_path",
-      "confidence_score": 1.0
+      "target": "src_player_player_load_path"
     },
     {
       "relation": "method",
@@ -2240,9 +2131,9 @@
       "source_file": "src/Player.py",
       "source_location": "L203",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_lose_life",
-      "confidence_score": 1.0
+      "target": "src_player_player_lose_life"
     },
     {
       "relation": "method",
@@ -2250,9 +2141,9 @@
       "source_file": "src/Player.py",
       "source_location": "L72",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_respawn",
-      "confidence_score": 1.0
+      "target": "src_player_player_respawn"
     },
     {
       "relation": "method",
@@ -2260,9 +2151,9 @@
       "source_file": "src/Player.py",
       "source_location": "L126",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player",
-      "target": "src_player_player_update",
-      "confidence_score": 1.0
+      "target": "src_player_player_update"
     },
     {
       "relation": "calls",
@@ -2271,9 +2162,9 @@
       "source_file": "src/Player.py",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player_init",
-      "target": "src_player_player_respawn",
-      "confidence_score": 1.0
+      "target": "src_player_player_respawn"
     },
     {
       "relation": "calls",
@@ -2282,9 +2173,9 @@
       "source_file": "src/Player.py",
       "source_location": "L210",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player_lose_life",
-      "target": "src_player_player_respawn",
-      "confidence_score": 1.0
+      "target": "src_player_player_respawn"
     },
     {
       "relation": "calls",
@@ -2293,9 +2184,9 @@
       "source_file": "src/Player.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player_can_go",
-      "target": "src_player_player_current_cell",
-      "confidence_score": 1.0
+      "target": "src_player_player_current_cell"
     },
     {
       "relation": "calls",
@@ -2304,9 +2195,9 @@
       "source_file": "src/Player.py",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player_update",
-      "target": "src_player_player_can_go",
-      "confidence_score": 1.0
+      "target": "src_player_player_can_go"
     },
     {
       "relation": "calls",
@@ -2315,9 +2206,9 @@
       "source_file": "src/Player.py",
       "source_location": "L189",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_player_player_draw",
-      "target": "src_player_player_load_path",
-      "confidence_score": 1.0
+      "target": "src_player_player_load_path"
     },
     {
       "relation": "contains",
@@ -2325,9 +2216,9 @@
       "source_file": "src/config.py",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_config",
-      "target": "src_config_config",
-      "confidence_score": 1.0
+      "target": "src_config_config"
     },
     {
       "relation": "method",
@@ -2335,9 +2226,9 @@
       "source_file": "src/config.py",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_config_config",
-      "target": "src_config_config_init",
-      "confidence_score": 1.0
+      "target": "src_config_config_init"
     },
     {
       "relation": "method",
@@ -2345,9 +2236,9 @@
       "source_file": "src/config.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_config_config",
-      "target": "src_config_config_validate",
-      "confidence_score": 1.0
+      "target": "src_config_config_validate"
     },
     {
       "relation": "calls",
@@ -2356,9 +2247,9 @@
       "source_file": "src/config.py",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_config_config_init",
-      "target": "src_config_config_validate",
-      "confidence_score": 1.0
+      "target": "src_config_config_validate"
     },
     {
       "relation": "contains",
@@ -2366,9 +2257,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state",
-      "target": "src_game_state_gamestate",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate"
     },
     {
       "relation": "method",
@@ -2376,9 +2267,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_game",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_game"
     },
     {
       "relation": "method",
@@ -2386,9 +2277,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_game_over",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_game_over"
     },
     {
       "relation": "method",
@@ -2396,9 +2287,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_highscores",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_highscores"
     },
     {
       "relation": "method",
@@ -2406,9 +2297,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_instructions",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_instructions"
     },
     {
       "relation": "method",
@@ -2416,9 +2307,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_main_menu",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_main_menu"
     },
     {
       "relation": "method",
@@ -2426,9 +2317,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_pauseed",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_pauseed"
     },
     {
       "relation": "method",
@@ -2436,9 +2327,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_is_victory",
-      "confidence_score": 1.0
+      "target": "src_game_state_gamestate_is_victory"
     },
     {
       "relation": "method",
@@ -2446,92 +2337,9 @@
       "source_file": "src/game_state.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_game_state_gamestate",
-      "target": "src_game_state_gamestate_switch_to",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "Phase5_Ghosts_Plan.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "src_ghost",
-      "target": "phase4_changes_fright_until"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/ghost.py",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "src_ghost",
-      "target": "src_ghost_ghost",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "Phase5_Ghosts_Plan.md",
-      "source_location": null,
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_ghost",
-      "target": "src_movement"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/ghost.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "src_ghost",
-      "target": "src_movement_pick_speed",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "Phase5_Ghosts_Plan.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "src_ghost",
-      "target": "src_pacgums"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/ghost.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "src_ghost_ghost",
-      "target": "src_ghost_ghost_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/ghost.py",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "src_ghost_ghost",
-      "target": "src_ghost_ghost_update",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/ghost.py",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "src_ghost_ghost_init",
-      "target": "src_movement_pick_speed"
+      "target": "src_game_state_gamestate_switch_to"
     },
     {
       "relation": "contains",
@@ -2539,9 +2347,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_main_menu_ui_load_path",
-      "confidence_score": 1.0
+      "target": "src_main_menu_ui_load_path"
     },
     {
       "relation": "contains",
@@ -2549,9 +2357,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_main_menu_ui_run_main_menu",
-      "confidence_score": 1.0
+      "target": "src_main_menu_ui_run_main_menu"
     },
     {
       "relation": "imports_from",
@@ -2560,9 +2368,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_pacman_images",
-      "confidence_score": 1.0
+      "target": "src_pacman_images"
     },
     {
       "relation": "imports",
@@ -2571,9 +2379,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui",
-      "target": "src_pacman_images_imageelement",
-      "confidence_score": 1.0
+      "target": "src_pacman_images_imageelement"
     },
     {
       "relation": "calls",
@@ -2582,9 +2390,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui_run_main_menu",
-      "target": "src_main_menu_ui_load_path",
-      "confidence_score": 1.0
+      "target": "src_main_menu_ui_load_path"
     },
     {
       "relation": "calls",
@@ -2593,9 +2401,9 @@
       "source_file": "src/main_menu_UI.py",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_main_menu_ui_run_main_menu",
-      "target": "src_pacman_images_imageelement",
-      "confidence_score": 1.0
+      "target": "src_pacman_images_imageelement"
     },
     {
       "relation": "implements",
@@ -2633,9 +2441,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_maze_loader",
-      "target": "src_maze_loader_mazeloader",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader"
     },
     {
       "relation": "imports_from",
@@ -2644,9 +2452,9 @@
       "source_file": "test_maze.py",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_maze",
-      "target": "src_maze_loader",
-      "confidence_score": 1.0
+      "target": "src_maze_loader"
     },
     {
       "relation": "method",
@@ -2654,9 +2462,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_maze_loader_mazeloader",
-      "target": "src_maze_loader_mazeloader_draw",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader_draw"
     },
     {
       "relation": "method",
@@ -2664,9 +2472,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_maze_loader_mazeloader",
-      "target": "src_maze_loader_mazeloader_generate",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader_generate"
     },
     {
       "relation": "method",
@@ -2674,9 +2482,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_maze_loader_mazeloader",
-      "target": "src_maze_loader_mazeloader_get_layout",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader_get_layout"
     },
     {
       "relation": "imports",
@@ -2685,9 +2493,9 @@
       "source_file": "test_maze.py",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_maze",
-      "target": "src_maze_loader_mazeloader",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader"
     },
     {
       "relation": "calls",
@@ -2696,9 +2504,9 @@
       "source_file": "src/maze_loader.py",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_maze_loader_mazeloader_draw",
-      "target": "src_maze_loader_mazeloader_get_layout",
-      "confidence_score": 1.0
+      "target": "src_maze_loader_mazeloader_get_layout"
     },
     {
       "relation": "rationale_for",
@@ -2716,9 +2524,9 @@
       "source_file": "src/movement.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_movement",
-      "target": "src_movement_can_go",
-      "confidence_score": 1.0
+      "target": "src_movement_can_go"
     },
     {
       "relation": "contains",
@@ -2726,9 +2534,9 @@
       "source_file": "src/movement.py",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_movement",
-      "target": "src_movement_is_aligned",
-      "confidence_score": 1.0
+      "target": "src_movement_is_aligned"
     },
     {
       "relation": "contains",
@@ -2736,9 +2544,9 @@
       "source_file": "src/movement.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_movement",
-      "target": "src_movement_pick_speed",
-      "confidence_score": 1.0
+      "target": "src_movement_pick_speed"
     },
     {
       "relation": "contains",
@@ -2746,9 +2554,9 @@
       "source_file": "src/movement.py",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_movement",
-      "target": "src_movement_pixel_to_cell",
-      "confidence_score": 1.0
+      "target": "src_movement_pixel_to_cell"
     },
     {
       "relation": "shares_data_with",
@@ -2786,9 +2594,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums",
-      "target": "src_pacgums_pacgummanager",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager"
     },
     {
       "relation": "method",
@@ -2796,9 +2604,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager",
-      "target": "src_pacgums_pacgummanager_collect",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_collect"
     },
     {
       "relation": "method",
@@ -2806,9 +2614,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager",
-      "target": "src_pacgums_pacgummanager_draw",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_draw"
     },
     {
       "relation": "method",
@@ -2816,9 +2624,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager",
-      "target": "src_pacgums_pacgummanager_init",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_init"
     },
     {
       "relation": "method",
@@ -2826,9 +2634,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager",
-      "target": "src_pacgums_pacgummanager_load_sprite",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_load_sprite"
     },
     {
       "relation": "method",
@@ -2836,9 +2644,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager",
-      "target": "src_pacgums_pacgummanager_remaining",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_remaining"
     },
     {
       "relation": "calls",
@@ -2847,9 +2655,9 @@
       "source_file": "src/pacgums.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacgums_pacgummanager_init",
-      "target": "src_pacgums_pacgummanager_load_sprite",
-      "confidence_score": 1.0
+      "target": "src_pacgums_pacgummanager_load_sprite"
     },
     {
       "relation": "contains",
@@ -2857,9 +2665,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacman_images",
-      "target": "src_pacman_images_imageelement",
-      "confidence_score": 1.0
+      "target": "src_pacman_images_imageelement"
     },
     {
       "relation": "method",
@@ -2867,9 +2675,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacman_images_imageelement",
-      "target": "src_pacman_images_imageelement_draw",
-      "confidence_score": 1.0
+      "target": "src_pacman_images_imageelement_draw"
     },
     {
       "relation": "method",
@@ -2877,9 +2685,9 @@
       "source_file": "src/pacman_images.py",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_pacman_images_imageelement",
-      "target": "src_pacman_images_imageelement_init",
-      "confidence_score": 1.0
+      "target": "src_pacman_images_imageelement_init"
     },
     {
       "relation": "references",
@@ -3062,6 +2870,26 @@
       "target": "images_chatgpt_image_jul_11_2026_03_31_12_pm_pacman_game"
     },
     {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "assets/images/Screenshot_From_2026-07-10_12-32-10-removebg-preview.png",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "images_chatgpt_image_jul_11_2026_03_31_12_pm_cigarette_sprite",
+      "target": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_collectible_powerup"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "assets/images/Screenshot_From_2026-07-10_12-32-10-removebg-preview.png",
+      "source_location": null,
+      "weight": 0.3,
+      "source": "images_chatgpt_image_jul_11_2026_03_31_12_pm_cigarette_sprite",
+      "target": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_super_pacgum"
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -3140,72 +2968,8 @@
       "weight": 1.0,
       "source": "images_screenshot_from_2026_07_10_12_31_49_removebg_preview_ghost_sprite",
       "target": "concept_pacman_ghost_enemy"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "assets/images/Screenshot_From_2026-07-10_12-32-10-removebg-preview.png",
-      "source_location": null,
-      "weight": 0.75,
-      "source": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_cigarette_pack_sprite",
-      "target": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_collectible_powerup"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "AMBIGUOUS",
-      "confidence_score": 0.3,
-      "source_file": "assets/images/Screenshot_From_2026-07-10_12-32-10-removebg-preview.png",
-      "source_location": null,
-      "weight": 0.3,
-      "source": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_cigarette_pack_sprite",
-      "target": "images_screenshot_from_2026_07_10_12_32_10_removebg_preview_super_pacgum"
     }
   ],
-  "hyperedges": [
-    {
-      "id": "maze_build_pipeline",
-      "label": "Number-to-tile maze build pipeline",
-      "nodes": [
-        "src_gamedemo",
-        "src_maze_loader",
-        "mazegenerator_mazegenerator",
-        "maze_build_phases_number_maze",
-        "maze_build_phases_tile_maze"
-      ],
-      "relation": "participate_in",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "Maze_Code_Reference.md"
-    },
-    {
-      "id": "phase4_movement_system",
-      "label": "Cell-snapped movement system",
-      "nodes": [
-        "src_player",
-        "phase4_changes_cell_snapping",
-        "phase4_changes_wanted_direction",
-        "phase4_changes_two_coordinate_systems"
-      ],
-      "relation": "form",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.9,
-      "source_file": "Phase4_Changes.md"
-    },
-    {
-      "id": "ghost_reuse_plan",
-      "label": "Ghost reuse of player movement manager patterns",
-      "nodes": [
-        "src_ghost",
-        "src_player",
-        "src_movement",
-        "src_pacgums"
-      ],
-      "relation": "participate_in",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.85,
-      "source_file": "Phase5_Ghosts_Plan.md"
-    }
-  ],
+  "hyperedges": [],
   "built_at_commit": "c43456a5a957ab34144700f561c2b833489bfe16"
 }

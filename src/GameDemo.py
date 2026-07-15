@@ -7,6 +7,7 @@ import pygame
 from src.Player import Player
 from src.maze_loader import MazeLoader
 from src.pacgums import PacgumManager
+from src.ghost import GhostManager
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
@@ -54,8 +55,10 @@ class GameDemo:
             pygame.quit()
             sys.exit(1)
 
-    # NEW (Task 4.3): builds one level - maze, player, pacgums. Called for
-    # level 1 from __init__ and again every time a level is cleared.
+    # NEW (Task 4.3): builds one level - maze, player, pacgums, ghosts. Called
+    # for level 1 from __init__ and again every time a level is cleared. This
+    # is SETUP (runs once per level) - per-frame movement/drawing lives in
+    # update()/draw(), not here.
     def _start_level(self):
         # Subject rule: level 1 uses the fixed seed from the config (so the
         # first maze is reproducible), every later level gets a random seed.
@@ -83,6 +86,9 @@ class GameDemo:
         self.pacgums = PacgumManager(
             self.grid, self.player.current_cell(), cell, offset_x, offset_y
         )
+        # NEW (Task 5.1): 4 ghosts, one per maze corner. Rebuilt every level
+        # like the player and pacgums.
+        self.ghosts = GhostManager(self.screen, self.grid, cell, offset_x, offset_y)
         return True
 
     def handle_event(self, event):
@@ -103,6 +109,9 @@ class GameDemo:
             return True
         if self.player.game_over_time:
             return False  # game-over screen still showing, skip the rest
+
+        #Ghost update
+        self.ghosts.update()
 
         # --- Task 4.2: collection and scoring ---
         # Whatever cell pacman's centre is in, try to eat what's there.
@@ -139,10 +148,12 @@ class GameDemo:
             self.player.draw()  # Player draws the Game Over screen itself
             return
 
-        # Draw order = layers: maze fills the background, pacgums sit in
-        # the corridors, pacman on top, HUD text above everything.
+        # Draw order = layers: maze fills the background, pacgums sit in the
+        # corridors, ghosts on top of those, pacman above the ghosts (so he
+        # stays visible on overlap), HUD text above everything.
         self.maze.draw(self.screen, self.grid)
         self.pacgums.draw(self.screen)
+        self.ghosts.draw(self.screen)
         self.player.draw()
 
         # Task 4.2: live score display (a proper HUD comes in Phase 8).
