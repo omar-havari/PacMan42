@@ -213,12 +213,3 @@ class Player:
             self.screen.blit(game_over, game_over_box)
         else:
             self.screen.blit(self.rotated, (self.x, self.y))
-
-    def lose_life(self):
-        self.lives -= 1
-        if self.lives <= 0:
-            self.game_over_time = pygame.time.get_ticks()
-        else:
-            # CHANGED (Task 3.3): respawn back at the maze centre instead
-            # of the raw screen centre (which could be inside a wall).
-            self.respawn()
