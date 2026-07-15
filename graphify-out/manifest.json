@@ -1,0 +1,162 @@
+{
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\MainMenu.py": {
+    "mtime": 1782746224.211438,
+    "ast_hash": "117fd58eade8b4eebb7b2cf3a9ad2383",
+    "semantic_hash": "117fd58eade8b4eebb7b2cf3a9ad2383"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\config.json": {
+    "mtime": 1782659683.6971486,
+    "ast_hash": "b34fe621aec2d9c6d73e366f83d3158a",
+    "semantic_hash": "b34fe621aec2d9c6d73e366f83d3158a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\mazegenerator-00001-py3-none-any\\mazegenerator\\__init__.py": {
+    "mtime": 1782736064.491441,
+    "ast_hash": "a251e0c5c13cc02aa61a294abe6b53ae",
+    "semantic_hash": "a251e0c5c13cc02aa61a294abe6b53ae"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\mazegenerator-00001-py3-none-any\\mazegenerator\\mazegenerator.py": {
+    "mtime": 1782736064.491441,
+    "ast_hash": "8209d02a85f704f062485c83a641f9a2",
+    "semantic_hash": "8209d02a85f704f062485c83a641f9a2"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\pac-man.py": {
+    "mtime": 1782662477.9631217,
+    "ast_hash": "fa6a2bb3d3df7dd482e32f438a190b7a",
+    "semantic_hash": "fa6a2bb3d3df7dd482e32f438a190b7a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\GameDemo.py": {
+    "mtime": 1783776963.108441,
+    "ast_hash": "643f5152f3fae2c0d21daaf6e82eeea4",
+    "semantic_hash": "643f5152f3fae2c0d21daaf6e82eeea4"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\Player.py": {
+    "mtime": 1783944237.0122225,
+    "ast_hash": "78d9d2da3d85c7643239e532a7fda43a",
+    "semantic_hash": "78d9d2da3d85c7643239e532a7fda43a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\config.py": {
+    "mtime": 1782660887.8236856,
+    "ast_hash": "f3cfe7ec23fa87e5407118fdf093e7bc",
+    "semantic_hash": "f3cfe7ec23fa87e5407118fdf093e7bc"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\game_state.py": {
+    "mtime": 1782651214.2344453,
+    "ast_hash": "e053406ecdff861cf8dd275c898b594a",
+    "semantic_hash": "e053406ecdff861cf8dd275c898b594a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\ghost.py": {
+    "mtime": 1783955011.7382112,
+    "ast_hash": "35fec5630b70d69c30165623412d6259",
+    "semantic_hash": "35fec5630b70d69c30165623412d6259"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\main_menu_UI.py": {
+    "mtime": 1783775512.4305584,
+    "ast_hash": "f5042308271588844942d0e7c7016c4f",
+    "semantic_hash": "f5042308271588844942d0e7c7016c4f"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\maze_loader.py": {
+    "mtime": 1783939499.1073408,
+    "ast_hash": "a2c4b2d4884e806df05769b6efef060e",
+    "semantic_hash": "a2c4b2d4884e806df05769b6efef060e"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\movement.py": {
+    "mtime": 1783944031.7403378,
+    "ast_hash": "2d02ff33456f4f4212e2e88bbb66f6c7",
+    "semantic_hash": "2d02ff33456f4f4212e2e88bbb66f6c7"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\pacgums.py": {
+    "mtime": 1783777880.436218,
+    "ast_hash": "c64bc86a78d7d53fced33744f68997fc",
+    "semantic_hash": "c64bc86a78d7d53fced33744f68997fc"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\pacman_images.py": {
+    "mtime": 1782481844.1395664,
+    "ast_hash": "1b68f52153cc2999b611f89f566c4672",
+    "semantic_hash": "1b68f52153cc2999b611f89f566c4672"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\test_maze.py": {
+    "mtime": 1783020663.1756,
+    "ast_hash": "045986f5b71b336debe16d6d36601163",
+    "semantic_hash": "045986f5b71b336debe16d6d36601163"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\HowEverythingWorks.md": {
+    "mtime": 1782481943.3848886,
+    "ast_hash": "1890bd9553c3e1cb44f87557b5ee96a0",
+    "semantic_hash": "1890bd9553c3e1cb44f87557b5ee96a0"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\Maze_Build_Phases.md": {
+    "mtime": 1783877419.2635095,
+    "ast_hash": "b7f8cb7776f616076b0d77a1cbc4e9ab",
+    "semantic_hash": "b7f8cb7776f616076b0d77a1cbc4e9ab"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\Maze_Code_Reference.md": {
+    "mtime": 1783939123.8763797,
+    "ast_hash": "22bd1d485da46e0cf40be2243a3dc1e6",
+    "semantic_hash": "22bd1d485da46e0cf40be2243a3dc1e6"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\Phase4_Changes.md": {
+    "mtime": 1783778716.880469,
+    "ast_hash": "453cc683ddbc4202bfff9a0a9eca6fa6",
+    "semantic_hash": "453cc683ddbc4202bfff9a0a9eca6fa6"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\Phase5_Ghosts_Plan.md": {
+    "mtime": 1783940144.0353148,
+    "ast_hash": "789444389fcd637379289cb9c0a53803",
+    "semantic_hash": "789444389fcd637379289cb9c0a53803"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\README.md": {
+    "mtime": 1782481933.5932622,
+    "ast_hash": "479917e415fcabf0c517b9f929756ce4",
+    "semantic_hash": "479917e415fcabf0c517b9f929756ce4"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\TASK_PLAN.md": {
+    "mtime": 1782481943.3861594,
+    "ast_hash": "1043a5a2f4f94a786ccb682d338daa5e",
+    "semantic_hash": "1043a5a2f4f94a786ccb682d338daa5e"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\mazegenerator-00001-py3-none-any\\mazegenerator-2.0.2.dist-info\\top_level.txt": {
+    "mtime": 1782736064.491441,
+    "ast_hash": "5877517782e85cefda900c67d70a73ac",
+    "semantic_hash": "5877517782e85cefda900c67d70a73ac"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\requirements.txt": {
+    "mtime": 1782482705.8451087,
+    "ast_hash": "313eb100b18da5b2ff287baf271e2a58",
+    "semantic_hash": "313eb100b18da5b2ff287baf271e2a58"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\en.subject (2).pdf": {
+    "mtime": 1782734861.4029005,
+    "ast_hash": "67b1dbb0bfd46580107f2842862b3b20",
+    "semantic_hash": "67b1dbb0bfd46580107f2842862b3b20"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\ChatGPT Image Jul 11, 2026, 03_31_12 PM.png": {
+    "mtime": 1783776771.6792984,
+    "ast_hash": "38309bf96c8f0673b470fcce9cd2ce4d",
+    "semantic_hash": "38309bf96c8f0673b470fcce9cd2ce4d"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\Screenshot_From_2026-07-10_12-31-14-removebg-preview.png": {
+    "mtime": 1783775512.4169903,
+    "ast_hash": "77b465cc197d41bf85d58734f61b4f7a",
+    "semantic_hash": "77b465cc197d41bf85d58734f61b4f7a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\Screenshot_From_2026-07-10_12-31-23-removebg-preview.png": {
+    "mtime": 1783775512.4179835,
+    "ast_hash": "8f97806b0d44e0437b945c2d203f745a",
+    "semantic_hash": "8f97806b0d44e0437b945c2d203f745a"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\Screenshot_From_2026-07-10_12-31-34-removebg-preview.png": {
+    "mtime": 1783775512.4199657,
+    "ast_hash": "62807c47bd6ee99a9a0b02267ebd44b3",
+    "semantic_hash": "62807c47bd6ee99a9a0b02267ebd44b3"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\Screenshot_From_2026-07-10_12-31-49-removebg-preview.png": {
+    "mtime": 1783775512.4209657,
+    "ast_hash": "4d0b09c44668a87a0e69b64ab88aab5e",
+    "semantic_hash": "4d0b09c44668a87a0e69b64ab88aab5e"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\assets\\images\\Screenshot_From_2026-07-10_12-32-10-removebg-preview.png": {
+    "mtime": 1783775512.4262388,
+    "ast_hash": "e311b10b3f8c93375790ce7f3c8fd4e9",
+    "semantic_hash": "e311b10b3f8c93375790ce7f3c8fd4e9"
+  }
+}

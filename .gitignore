@@ -10,3 +10,4 @@ dist/
 build/
 *.spec
 highscores.json
+src/ "graphify-out/"

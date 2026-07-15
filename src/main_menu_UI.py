@@ -26,16 +26,25 @@ def run_main_menu(config):
     )
     pygame.display.set_caption("Test")
 
-    font_main = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300)
-    main_title = font_main.render("Pacman", False, (255, 255, 0))
-    font_menu_buttons = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 100)
-    start_game = font_menu_buttons.render("New Game", False, (255, 255, 0))
-    high_scores = font_menu_buttons.render("High scores", False, (255, 255, 0))
+    # --- Blue theme, matching the maze wall color (33, 33, 255) ---
+    BORDER_COLOR = (33, 33, 255)
+    TEXT_COLOR = (90, 140, 255)
+    BG_COLOR = (0, 0, 0)
+    BORDER_THICKNESS = 6
+    BORDER_RADIUS = 16
+    PANEL_PADDING = 70
+
+    # Smaller fonts than before (was 300 / 100)
+    font_main = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 120)
+    main_title = font_main.render("Pacman", False, TEXT_COLOR)
+    font_menu_buttons = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 45)
+    start_game = font_menu_buttons.render("New Game", False, TEXT_COLOR)
+    high_scores = font_menu_buttons.render("High scores", False, TEXT_COLOR)
     screen_width, screen_height = screen.get_size()
 
     # Layout based on actual rendered sizes instead of fixed pixel offsets,
     # so the spacing still works if a font size changes later.
-    GAP = 60
+    GAP = 40
     total_height = (
         main_title.get_height()
         + GAP
@@ -58,8 +67,12 @@ def run_main_menu(config):
         top=start_game_box.bottom + GAP
     )
 
+    # Border panel wraps title + buttons with padding on all sides
+    panel_rect = main_title_box.unionall([start_game_box, high_scores_box])
+    panel_rect = panel_rect.inflate(PANEL_PADDING * 2, PANEL_PADDING * 2)
+
     pacman_icon = ImageElement(
-        os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-06-13_15-17-12-removebg-preview.png'),
+        os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-14-removebg-preview.png'),
         (150, 150),
         (screen_width / 2, 3 * screen_height / 4)
     )
@@ -78,6 +91,7 @@ def run_main_menu(config):
                     game.handle_event(event)
             game_over = game.update()
             game.draw()
+            pygame.display.flip()
             if game_over:
                 game = None
         else:
@@ -99,7 +113,11 @@ def run_main_menu(config):
                         game = GameDemo(screen, config)
                     if high_scores_box.collidepoint(event.pos):
                         print("Placeholder")
-            screen.fill((0, 0, 0))
+            screen.fill(BG_COLOR)
+            pygame.draw.rect(
+                screen, BORDER_COLOR, panel_rect,
+                width=BORDER_THICKNESS, border_radius=BORDER_RADIUS
+            )
             screen.blit(main_title, main_title_box)
             screen.blit(start_game, start_game_box)
             screen.blit(high_scores, high_scores_box)
