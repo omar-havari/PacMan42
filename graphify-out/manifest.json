@@ -45,9 +45,9 @@
     "semantic_hash": "e053406ecdff861cf8dd275c898b594a"
   },
   "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\ghost.py": {
-    "mtime": 1783955011.7382112,
-    "ast_hash": "35fec5630b70d69c30165623412d6259",
-    "semantic_hash": "35fec5630b70d69c30165623412d6259"
+    "mtime": 1784030436.7410264,
+    "ast_hash": "7435301e2422dbbc9b02a6f237fa4288",
+    "semantic_hash": "7435301e2422dbbc9b02a6f237fa4288"
   },
   "C:\\Users\\keidi\\OneDrive\\PacMan42\\src\\main_menu_UI.py": {
     "mtime": 1783775512.4305584,
@@ -158,5 +158,10 @@
     "mtime": 1783775512.4262388,
     "ast_hash": "e311b10b3f8c93375790ce7f3c8fd4e9",
     "semantic_hash": "e311b10b3f8c93375790ce7f3c8fd4e9"
+  },
+  "C:\\Users\\keidi\\OneDrive\\PacMan42\\.claude\\settings.local.json": {
+    "mtime": 1784026147.5014474,
+    "ast_hash": "be53f00e90ca785df2606d083005aecc",
+    "semantic_hash": "be53f00e90ca785df2606d083005aecc"
   }
 }

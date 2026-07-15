@@ -80,3 +80,48 @@ class Ghost:
                 self.color,
                 (self.x, self.y, self.cell, self.cell),
             )
+
+
+# Owns all 4 ghosts so GameDemo only ever talks to one object, exactly like
+# PacgumManager owns every pacgum. One update()/draw() call fans out to all
+# four ghosts.
+class GhostManager:
+    def __init__(self, screen, grid, cell, offset_x, offset_y):
+        self.screen = screen
+        self.grid = grid
+        self.cell = cell
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+
+        rows = len(grid)
+        cols = len(grid[0])
+        # The 4 maze corners. Odd row/col indices are always corridors (the
+        # wall border sits on the even edges), so these are guaranteed
+        # walkable - same trick PacgumManager uses for super-pacgums.
+        corners = [
+            (1, 1),               # top-left
+            (1, cols - 2),        # top-right
+            (rows - 2, 1),        # bottom-left
+            (rows - 2, cols - 2), # bottom-right
+        ]
+
+        colors = [
+            (255, 0, 0),      # red
+            (255, 184, 255),  # pink
+            (0, 255, 255),    # cyan
+            (255, 184, 82),   # orange
+        ]
+
+        # zip pairs each corner with one color: corner 1 -> red, etc.
+        self.ghosts = [
+            Ghost(screen, grid, cell, offset_x, offset_y, color, corner)
+            for corner, color in zip(corners, colors)
+        ]
+
+    def update(self):
+        for ghost in self.ghosts:
+            ghost.update()
+
+    def draw(self, screen):
+        for ghost in self.ghosts:
+            ghost.draw()
