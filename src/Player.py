@@ -6,6 +6,12 @@ from src.movement import _DIRECTIONS, _OPPOSITE
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
+# NEW (Task 3.3/5.5): short grace period after respawning where ghost
+# contact can't cost another life - without it, respawning back into a
+# ghost's current cell (or one it reaches a frame later) could chain into
+# an instant second death.
+_INVINCIBILITY_MS = 1000
+
 
 class Player:
     # CHANGED (Phase 4 prerequisite = Tasks 3.2/3.3): the player now lives
@@ -77,6 +83,14 @@ class Player:
         self.direction = None
         self.wanted_direction = None
         self.rotated = self.frames[self.current_frame]
+        # NEW (Task 3.3/5.5): brief invincibility so respawning doesn't
+        # immediately chain into another ghost-contact death.
+        self.invincible_until = pygame.time.get_ticks() + _INVINCIBILITY_MS
+
+    # NEW (Task 5.5): used by GameDemo before charging a ghost-contact life
+    # loss, so the respawn grace period above actually does something.
+    def is_invincible(self):
+        return pygame.time.get_ticks() < self.invincible_until
 
     # NEW: pixel position -> grid cell. Uses the CENTRE of the sprite so
     # the answer doesn't flip early while pacman is between two cells.
