@@ -110,8 +110,10 @@ class GameDemo:
         if self.player.game_over_time:
             return False  # game-over screen still showing, skip the rest
 
-        #Ghost update
-        self.ghosts.update()
+        # Ghost update - chase Pac-Man (Task 5.2), or flee while a
+        # super-pacgum's effect is still active (Task 5.3).
+        fright_remaining = self.fright_until - pygame.time.get_ticks()
+        self.ghosts.update(self.player.current_cell(), fright_remaining)
 
         # --- Task 4.2: collection and scoring ---
         # Whatever cell pacman's centre is in, try to eat what's there.
