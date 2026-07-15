@@ -77,8 +77,10 @@ class Ghost:
         if is_aligned(self.x, self.y, self.cell, self.offset_x, self.offset_y):
             row, col = self.current_cell()
             options = [d for d in _DIRECTIONS if can_go(self.grid, row, col, d)]
-            # don't immediately reverse unless it's the only way out (dead end)
-            if self.direction and len(options) > 1:
+            # don't immediately reverse unless it's the only way out (dead
+            # end) - UNLESS frightened: fleeing ghosts are allowed to double
+            # back on themselves to put distance between them and Pac-Man.
+            if self.direction and len(options) > 1 and not frightened:
                 options = [d for d in options if d != _OPPOSITE[self.direction]]
             if options:
                 target_row, target_col = target_cell
