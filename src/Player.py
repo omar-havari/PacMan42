@@ -6,6 +6,12 @@ from src.movement import _DIRECTIONS, _OPPOSITE
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
+# NEW (Task 3.3/5.5): short grace period after respawning where ghost
+# contact can't cost another life - without it, respawning back into a
+# ghost's current cell (or one it reaches a frame later) could chain into
+# an instant second death.
+_INVINCIBILITY_MS = 1000
+
 
 class Player:
     # CHANGED (Phase 4 prerequisite = Tasks 3.2/3.3): the player now lives
@@ -77,6 +83,26 @@ class Player:
         self.direction = None
         self.wanted_direction = None
         self.rotated = self.frames[self.current_frame]
+        # NEW (Task 3.3/5.5): brief invincibility so respawning doesn't
+        # immediately chain into another ghost-contact death.
+        self.invincible_until = pygame.time.get_ticks() + _INVINCIBILITY_MS
+
+    # NEW (Task 5.5): used by GameDemo before charging a ghost-contact life
+    # loss, so the respawn grace period above actually does something.
+    def is_invincible(self):
+        return pygame.time.get_ticks() < self.invincible_until
+
+    # NEW (Task 8.4): pause support. Every one of the player's timers is an
+    # ABSOLUTE get_ticks() timestamp, and the wall clock keeps running while
+    # the game is paused. Pushing each timestamp forward by the paused
+    # duration makes them behave as if no time passed at all: the invincible
+    # window, the animation timer, and the game-over screen all resume exactly
+    # where they left off.
+    def shift_time(self, delta):
+        self.invincible_until += delta
+        self.last_switch += delta
+        if self.game_over_time:
+            self.game_over_time += delta
 
     # NEW: pixel position -> grid cell. Uses the CENTRE of the sprite so
     # the answer doesn't flip early while pacman is between two cells.
@@ -199,12 +225,3 @@ class Player:
             self.screen.blit(game_over, game_over_box)
         else:
             self.screen.blit(self.rotated, (self.x, self.y))
-
-    def lose_life(self):
-        self.lives -= 1
-        if self.lives <= 0:
-            self.game_over_time = pygame.time.get_ticks()
-        else:
-            # CHANGED (Task 3.3): respawn back at the maze centre instead
-            # of the raw screen centre (which could be inside a wall).
-            self.respawn()

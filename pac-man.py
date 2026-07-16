@@ -1,13 +1,14 @@
 import sys
 from src.config import Config
-from src.main_menu_UI import run_main_menu
+from src.app import run_game
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].endswith(".json"):
         print("Usage: python pac-man.py config.json")
         sys.exit(1)
-    
+
     config_file_path = sys.argv[1]
     config = Config(config_file_path)
-    run_main_menu(config)
+    # Task 8.1: hand off to the single GameState-driven main loop.
+    run_game(config)

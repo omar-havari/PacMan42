@@ -58,22 +58,31 @@ class MazeLoader:
     # exactly where each cell sits on screen, the math lives in ONE method
     # everybody calls - so the drawing and the collision logic can never
     # disagree about the geometry.
-    def get_layout(self, screen, grid):
+    # CHANGED (Task 8.3): "top_margin" reserves a strip of pixels at the top
+    # of the screen for the HUD. The maze is laid out in the space BELOW that
+    # strip only, so the HUD and the maze can never overlap - the whole maze
+    # is pushed down by at least top_margin. Callers that don't care (nothing
+    # currently) still work: the default 0 reproduces the old full-screen fit.
+    def get_layout(self, screen, grid, top_margin=0):
         rows = len(grid)
         cols = len(grid[0])
         screen_width = screen.get_width()
         screen_height = screen.get_height()
 
+        # Only the area below the reserved HUD strip is available for the maze.
+        available_height = screen_height - top_margin
+
         # Square cells so the maze isn't stretched, centred with a letterbox.
-        cell = min(screen_width // cols, screen_height // rows)
+        cell = min(screen_width // cols, available_height // rows)
         offset_x = (screen_width - cell * cols) // 2
-        offset_y = (screen_height - cell * rows) // 2
+        # Centre vertically WITHIN the available area, then push past the strip.
+        offset_y = top_margin + (available_height - cell * rows) // 2
         return cell, offset_x, offset_y
 
-    def draw(self, screen, grid):
+    def draw(self, screen, grid, top_margin=0):
         rows = len(grid)
         cols = len(grid[0])
-        cell, offset_x, offset_y = self.get_layout(screen, grid)
+        cell, offset_x, offset_y = self.get_layout(screen, grid, top_margin)
 
         # Thickness of the blue "tube" outline. Thinner walls => wider corridors.
         border = max(2, cell // 4)
