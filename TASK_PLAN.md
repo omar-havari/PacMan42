@@ -9,26 +9,26 @@ This plan follows the order you should actually build the project in, from where
 ### Task 0.1 — Finish the animation + game-over timing fix
 **What it brings:** Removes the blocking `time.sleep()` calls so the game loop never freezes. This is required by the subject ("robust error handling, no crash" mindset extends to "no freezing").
 **Subtasks:**
-- [ ] Confirm mouth animation cycles correctly in all 4 directions
-- [ ] Confirm game-over timer uses `get_ticks()` instead of `time.sleep()`
-- [ ] Confirm pacman is not drawn over the Game Over screen (use `else` branch)
-- [ ] Remove unused `import time`
+- [x] Confirm mouth animation cycles correctly in all 4 directions
+- [x] Confirm game-over timer uses `get_ticks()` instead of `time.sleep()`
+- [x] Confirm pacman is not drawn over the Game Over screen (use `else` branch)
+- [x] Remove unused `import time`
 
 ### Task 0.2 — Create `game_state.py`
 **What it brings:** A single source of truth for "which screen is currently active." Every later screen (pause, victory, highscores) plugs into this instead of creating its own separate loop. Without this, the codebase becomes unmanageable once you add 5+ screens.
 **Subtasks:**
-- [ ] Create the `GameState` class with constants (MAIN_MENU, GAME, PAUSE, GAME_OVER, VICTORY, HIGHSCORES, INSTRUCTIONS)
-- [ ] Add `switch_to()` and `is_x()` helper methods
-- [ ] Do NOT migrate old code yet — just have the file ready
+- [x] Create the `GameState` class with constants (MAIN_MENU, GAME, PAUSE, GAME_OVER, VICTORY, HIGHSCORES, INSTRUCTIONS)
+- [x] Add `switch_to()` and `is_x()` helper methods
+- [x] Do NOT migrate old code yet — just have the file ready
 
 ### Task 0.3 — Set up project skeleton matching subject requirements
 **What it brings:** The subject grades structure, not just gameplay. Get the skeleton right early so you're not reshuffling files mid-project.
 **Subtasks:**
-- [ ] Create folder structure: `src/`, `assets/` (images, fonts), `project-management/`, `tests/`
-- [ ] Create `Makefile` with `install`, `run`, `debug`, `clean`, `lint`, `lint-strict`
-- [ ] Create `.gitignore` (pycache, .mypy_cache, venv, etc.)
-- [ ] Create `requirements.txt` (pygame, mypy, flake8, pytest)
-- [ ] Create empty `config.json` placeholder
+- [x] Create folder structure: `src/`, `assets/` (images, fonts), `project-management/`, `tests/`
+- [x] Create `Makefile` with `install`, `run`, `debug`, `clean`, `lint`, `lint-strict`
+- [x] Create `.gitignore` (pycache, .mypy_cache, venv, etc.)
+- [x] Create `requirements.txt` (pygame, mypy, flake8, pytest)
+- [x] Create empty `config.json` placeholder
 
 ---
 
@@ -37,28 +37,28 @@ This plan follows the order you should actually build the project in, from where
 ### Task 1.1 — Config file loader with comment support
 **What it brings:** This is the literal entry point of the program (`python3 pac-man.py config.json`). Nothing else can be properly tested without it, since lives, pacgum count, scoring values, and level count all come from here.
 **Subtasks:**
-- [ ] Write a function that reads the file and strips `#` comment lines before parsing
-- [ ] Parse remaining content as JSON
-- [ ] Define all required keys with safe defaults (highscore_filename, level array, width, height, lives, pacgum, points_per_pacgum, points_per_super_pacgum, points_per_ghost, seed, level_max_time)
-- [ ] Build a `Config` dataclass or simple class to hold parsed values with type hints
+- [x] Write a function that reads the file and strips `#` comment lines before parsing
+- [x] Parse remaining content as JSON
+- [x] Define all required keys with safe defaults (highscore_filename, level array, width, height, lives, pacgum, points_per_pacgum, points_per_super_pacgum, points_per_ghost, seed, level_max_time)
+- [x] Build a `Config` dataclass or simple class to hold parsed values with type hints
 
 ### Task 1.2 — Faulty config handling
 **What it brings:** The subject explicitly states the config will be modified during your defense to test robustness. This task is directly graded.
 **Subtasks:**
-- [ ] Missing key → use default, print a clear log message, continue
-- [ ] Invalid value (e.g. negative lives, non-int) → clamp to default, log message
-- [ ] Unknown key → silently ignore
-- [ ] Missing file / file not found → clean error message, exit code, NO traceback
-- [ ] File exists but is not valid JSON after comment stripping → clean error, no traceback
-- [ ] Write simple manual tests (not graded, just for yourself) for each bad-input case
+- [x] Missing key → use default, print a clear log message, continue
+- [x] Invalid value (e.g. negative lives, non-int) → clamp to default, log message
+- [x] Unknown key → silently ignore
+- [x] Missing file / file not found → clean error message, exit code, NO traceback
+- [x] File exists but is not valid JSON after comment stripping → clean error, no traceback
+- [x] Write simple manual tests (not graded, just for yourself) for each bad-input case
 
 ### Task 1.3 — CLI entry point: `pac-man.py`
 **What it brings:** The actual program launcher required by the subject's usage spec.
 **Subtasks:**
-- [ ] Accept exactly one CLI argument
-- [ ] Validate argument count and file extension
-- [ ] Load config via Task 1.1/1.2 logic
-- [ ] Pass loaded config into the game state / main loop
+- [x] Accept exactly one CLI argument
+- [x] Validate argument count and file extension
+- [x] Load config via Task 1.1/1.2 logic
+- [x] Pass loaded config into the game state / main loop
 
 ---
 
@@ -67,26 +67,26 @@ This plan follows the order you should actually build the project in, from where
 ### Task 2.1 — Install and wrap the assigned A-Maze-ing package
 **What it brings:** This is a hard requirement — you are NOT allowed to write your own generator. Getting this working early de-risks the whole project, since everything else (ghosts, pacgums, player spawn) depends on having a maze.
 **Subtasks:**
-- [ ] Install the assigned package (pip/local)
-- [ ] Read its actual interface/docs to learn its function signatures
-- [ ] Write a `MazeLoader` adapter class that calls the package and converts its output into your own internal grid format (e.g. 2D list of WALL/CORRIDOR)
-- [ ] Always call with `PERFECT=False`
-- [ ] Level 1 uses config's fixed seed; levels 2+ use random seeds
+- [x] Install the assigned package (pip/local)
+- [x] Read its actual interface/docs to learn its function signatures
+- [x] Write a `MazeLoader` adapter class that calls the package and converts its output into your own internal grid format (e.g. 2D list of WALL/CORRIDOR)
+- [x] Always call with `PERFECT=False`
+- [x] Level 1 uses config's fixed seed; levels 2+ use random seeds
 
 ### Task 2.2 — Handle maze generator failure cleanly
 **What it brings:** Directly required by subject: "If the generator fails, you must handle the error cleanly."
 **Subtasks:**
-- [ ] Wrap generator call in try/except
-- [ ] On failure, log a clear message and either retry once or exit cleanly (decide and document which)
-- [ ] Test by temporarily feeding it a broken parameter to confirm no traceback appears
+- [x] Wrap generator call in try/except
+- [x] On failure, log a clear message and either retry once or exit cleanly (decide and document which)
+- [x] Test by temporarily feeding it a broken parameter to confirm no traceback appears
 
 ### Task 2.3 — Render the maze
 **What it brings:** Without this you can't see or test anything visually — this is the first real visual milestone after the config/maze logic.
 **Subtasks:**
-- [ ] Draw WALL cells as colored blocks
-- [ ] Draw CORRIDOR cells as background
-- [ ] Scale cell size dynamically to width/height from config
-- [ ] Confirm rendering matches maze data exactly (no off-by-one errors)
+- [x] Draw WALL cells as colored blocks
+- [x] Draw CORRIDOR cells as background
+- [x] Scale cell size dynamically to width/height from config
+- [x] Confirm rendering matches maze data exactly (no off-by-one errors)
 
 ---
 
@@ -95,32 +95,32 @@ This plan follows the order you should actually build the project in, from where
 ### Task 3.1 — Refactor Player into its own class (Player.py)
 **What it brings:** Moves from "demo" code into real reusable architecture as required by "object-oriented programming, modular, reusable architecture."
 **Subtasks:**
-- [ ] Move x, y, speed, direction, frames, animation logic out of `GameDemo.py` into `Player` class
-- [ ] Keep the chewing animation logic (already working)
-- [ ] Add `lives` attribute (from config)
+- [x] Move x, y, speed, direction, frames, animation logic out of `GameDemo.py` into `Player` class
+- [x] Keep the chewing animation logic (already working)
+- [x] Add `lives` attribute (from config)
 
 ### Task 3.2 — Grid-based movement + wall collision
 **What it brings:** Currently pacman moves freely in open space. Real Pac-Man requires movement constrained to maze corridors — this is core to making it actually feel like the game.
 **Subtasks:**
-- [ ] Convert pixel position to maze grid cell
-- [ ] Block movement into WALL cells
-- [ ] Decide and implement: free-pixel movement with collision checks, OR strict cell-snapping movement
-- [ ] Test all 4 directions against various wall configurations
+- [x] Convert pixel position to maze grid cell
+- [x] Block movement into WALL cells
+- [x] Decide and implement: free-pixel movement with collision checks, OR strict cell-snapping movement
+- [x] Test all 4 directions against various wall configurations
 
 ### Task 3.3 — Player spawn at maze center + respawn on death
 **What it brings:** Required by subject ("the player starts in the middle of the maze," "respawns in the middle after losing a life").
 **Subtasks:**
-- [ ] Calculate maze center cell dynamically (not hardcoded)
-- [ ] Place player there on level start
-- [ ] On life loss, reset position to center
-- [ ] Add short respawn invincibility window (e.g. 1 second) to avoid instant double-death
+- [x] Calculate maze center cell dynamically (not hardcoded)
+- [x] Place player there on level start
+- [x] On life loss, reset position to center
+- [x] Add short respawn invincibility window (e.g. 1 second) to avoid instant double-death
 
 ### Task 3.4 — Lives, death, and Game Over condition
 **What it brings:** Implements the actual lose-condition of the game loop described in the subject.
 **Subtasks:**
-- [ ] Lose 1 life on ghost contact (placeholder collision for now, real ghost logic comes later)
-- [ ] Trigger Game Over screen when lives reach 0
-- [ ] Confirm Game Over uses non-blocking timer (already solved in Phase 0)
+- [x] Lose 1 life on ghost contact (placeholder collision for now, real ghost logic comes later)
+- [x] Trigger Game Over screen when lives reach 0
+- [x] Confirm Game Over uses non-blocking timer (already solved in Phase 0)
 
 ---
 
@@ -129,24 +129,24 @@ This plan follows the order you should actually build the project in, from where
 ### Task 4.1 — Place pacgums and super-pacgums
 **What it brings:** Required maze content — also the core "objective" of each level (eat all pacgums to win).
 **Subtasks:**
-- [ ] Place small pacgum dot in every corridor cell except player start
-- [ ] Place super-pacgum in each of the 4 corners (or nearest valid corridor if corner is a wall)
-- [ ] Track total pacgum count for win-condition checking
+- [x] Place small pacgum dot in every corridor cell except player start
+- [x] Place super-pacgum in each of the 4 corners (or nearest valid corridor if corner is a wall)
+- [x] Track total pacgum count for win-condition checking
 
 ### Task 4.2 — Collection logic and scoring
 **What it brings:** Implements the scoring system described in section 6.2 and 6.6 of the subject.
 **Subtasks:**
-- [ ] On player entering pacgum cell: remove dot, add `points_per_pacgum`
-- [ ] On player entering super-pacgum cell: remove it, add `points_per_super_pacgum`, trigger ghost edible mode (timer-based, placeholder until ghosts exist)
-- [ ] Ensure score never decreases
-- [ ] Display live score (used later by HUD)
+- [x] On player entering pacgum cell: remove dot, add `points_per_pacgum`
+- [x] On player entering super-pacgum cell: remove it, add `points_per_super_pacgum`, trigger ghost edible mode (timer-based, placeholder until ghosts exist)
+- [x] Ensure score never decreases
+- [x] Display live score (used later by HUD)
 
 ### Task 4.3 — Level win condition
 **What it brings:** Required game loop step: "Win or Lose" after eating all pacgums.
 **Subtasks:**
-- [ ] Detect when remaining pacgum count hits 0
-- [ ] Transition to next level (new maze, same score/lives carried over)
-- [ ] Detect when final level (≥10) is completed → trigger Victory screen
+- [x] Detect when remaining pacgum count hits 0
+- [x] Transition to next level (new maze, same score/lives carried over)
+- [x] Detect when final level (≥10) is completed → trigger Victory screen
 
 ---
 
@@ -155,40 +155,40 @@ This plan follows the order you should actually build the project in, from where
 ### Task 5.1 — Ghost base class and spawning
 **What it brings:** Core antagonist mechanic — without ghosts there is no actual Pac-Man game, just a maze walker.
 **Subtasks:**
-- [ ] Create `Ghost` class with position, speed, state (CHASE/FLEE/EATEN)
-- [ ] Spawn 4 ghosts, one per maze corner
-- [ ] Load the 4 ghost sprite images you already have (pink, orange, cyan, red)
-- [ ] Implement basic corridor-constrained movement (same wall logic as player)
+- [x] Create `Ghost` class with position, speed, state (CHASE/FLEE/EATEN)
+- [x] Spawn 4 ghosts, one per maze corner
+- [x] Load the 4 ghost sprite images you already have (pink, orange, cyan, red)
+- [x] Implement basic corridor-constrained movement (same wall logic as player)
 
 ### Task 5.2 — Chase behavior
 **What it brings:** Required behavior: "Chase the player when not edible."
 **Subtasks:**
 - [ ] Choose and implement a chase algorithm (recommend: simple distance-based direction choice at each intersection — easiest to get working correctly)
-- [ ] Document the choice and reasoning in README later
-- [ ] Test all 4 ghosts chase simultaneously without freezing or glitching
+- [x] Document the choice and reasoning in README later
+- [x] Test all 4 ghosts chase simultaneously without freezing or glitching
 
 ### Task 5.3 — Flee behavior (edible ghosts)
 **What it brings:** Required behavior tied to super-pacgum mechanic — this is what makes super-pacgums meaningful.
 **Subtasks:**
-- [ ] On super-pacgum pickup, switch all ghosts to FLEE state for a fixed duration
-- [ ] In FLEE state, ghost moves away from player instead of toward
-- [ ] Change ghost sprite/color while fleeing (visual feedback)
-- [ ] Flash warning in the last ~2 seconds before flee ends
-- [ ] On timer expiry, return surviving ghosts to CHASE
+- [x] On super-pacgum pickup, switch all ghosts to FLEE state for a fixed duration
+- [x] In FLEE state, ghost moves away from player instead of toward
+- [x] Change ghost sprite/color while fleeing (visual feedback)
+- [x] Flash warning in the last ~2 seconds before flee ends
+- [x] On timer expiry, return surviving ghosts to CHASE
 
 ### Task 5.4 — Eaten ghost + respawn
 **What it brings:** Completes the scoring loop (`points_per_ghost`) and the cycle described in section 6.3.
 **Subtasks:**
-- [ ] Detect collision between player and FLEE-state ghost → EATEN state, add `points_per_ghost`
-- [ ] Ghost disappears or shows "eyes only" sprite
-- [ ] After 5–10 seconds (configurable), ghost respawns at its corner in CHASE state
+- [x] Detect collision between player and FLEE-state ghost → EATEN state, add `points_per_ghost`
+- [x] Ghost disappears or shows "eyes only" sprite
+- [x] After 5–10 seconds (configurable), ghost respawns at its corner in CHASE state
 
 ### Task 5.5 — Real player/ghost collision (replaces placeholder)
 **What it brings:** Connects ghosts to the life-loss system built in Phase 3.
 **Subtasks:**
-- [ ] Detect collision between player and CHASE-state ghost → lose life, respawn player
-- [ ] Confirm FLEE-state ghosts do not cause life loss
-- [ ] Confirm respawn invincibility window prevents double-hits
+- [x] Detect collision between player and CHASE-state ghost → lose life, respawn player
+- [x] Confirm FLEE-state ghosts do not cause life loss
+- [x] Confirm respawn invincibility window prevents double-hits
 
 ---
 
@@ -197,17 +197,17 @@ This plan follows the order you should actually build the project in, from where
 ### Task 6.1 — Per-level countdown timer
 **What it brings:** Required HUD element and game-progression rule (`level_max_time`).
 **Subtasks:**
-- [ ] Countdown from `level_max_time` each level using `get_ticks()` (non-blocking)
-- [ ] Decide behavior on timer expiry (restart level vs. game over) and document it
+- [x] Countdown from `level_max_time` each level using `get_ticks()` (non-blocking)
+- [x] Decide behavior on timer expiry (restart level vs. game over) and document it
 - [ ] Pause timer when game is paused (after Phase 8)
 
 ### Task 6.2 — Multi-level progression (≥10 levels)
 **What it brings:** Required minimum level count and the "win the game" condition.
 **Subtasks:**
-- [ ] Loop level generation using config's `level` array (or generate procedurally if array shorter than 10)
-- [ ] Carry score and lives across levels
-- [ ] Reset pacgum/super-pacgum/ghost positions each level
-- [ ] Confirm seed logic: level 1 fixed seed, levels 2+ random
+- [x] Loop level generation using config's `level` array (or generate procedurally if array shorter than 10)
+- [x] Carry score and lives across levels
+- [x] Reset pacgum/super-pacgum/ghost positions each level
+- [x] Confirm seed logic: level 1 fixed seed, levels 2+ random
 
 ---
 

@@ -1,5 +1,4 @@
 import os
-import random
 import sys
 
 import pygame
@@ -81,10 +80,22 @@ class GameDemo:
         # first maze is reproducible), every later level gets a random seed.
         # This still holds true even when level 1 is being regenerated after
         # a timeout, so it stays reproducible on retries too.
+        #
+        # BUGFIX (Task 6.2): this used to pick the "random" seed ourselves
+        # via random.randrange(1_000_000). But MazeGenerator.generate() (see
+        # Maze_Code_Reference.md) does `random.seed(seed) if seed > 0 else
+        # random.seed()` - i.e. it reseeds Python's GLOBAL random module.
+        # Level 1 always calls it with the same config.seed, which leaves
+        # that global RNG in the exact same deterministic state every run -
+        # so randrange() right after it produced the SAME "random" number
+        # on every single run of the game, not actually random at all.
+        # Passing 0 instead makes MazeGenerator itself call random.seed()
+        # with no argument, which seeds from real OS entropy/time - genuine
+        # randomness, unaffected by level 1's fixed seed.
         if self.level == 1:
             seed = self.config.seed
         else:
-            seed = random.randrange(1_000_000)
+            seed = 0
 
         # NEW (Task 6.2): config's "level" array can override the maze size
         # for a given level (1-indexed -> config.level[level - 1]). Any
@@ -144,12 +155,13 @@ class GameDemo:
         self.ghost_death_freeze_until = None
         return True
 
-    # NEW (Task 5.5): a ghost caught Pac-Man. Unlike _start_level(), this
-    # does NOT touch self.grid or self.pacgums - the maze and whichever
-    # pacgums are still uneaten stay exactly as they were. Only positions
-    # reset: Pac-Man back to the centre, ghosts back to their spawn
-    # corners in CHASE - then the normal "Ready" countdown runs again
-    # before movement resumes, same as any other level (re)start.
+    # NEW (Task 5.5/6.1): retrying the SAME level attempt - either a ghost
+    # caught Pac-Man, or the level timer ran out. Unlike _start_level(),
+    # this does NOT touch self.grid or self.pacgums - the maze and
+    # whichever pacgums are still uneaten stay exactly as they were. Only
+    # positions reset: Pac-Man back to the centre, ghosts back to their
+    # spawn corners in CHASE - then the normal "Ready" countdown runs
+    # again before movement resumes, same as any other level (re)start.
     def _restart_level_in_place(self):
         self.player.respawn()
         cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid)
@@ -179,14 +191,21 @@ class GameDemo:
         # --- Task 6.1: time's up, frozen beat before the next attempt ---
         # The moment the timer hit zero, everything froze exactly where it
         # was (see below) instead of instantly regenerating - this holds
-        # that freeze for _TIME_UP_FREEZE_MS before restarting the same
-        # level's "Ready" countdown.
+        # that freeze for _TIME_UP_FREEZE_MS before applying the life loss
+        # and restarting the same level's "Ready" countdown. Uses
+        # _restart_level_in_place (same as ghost death, Task 5.5) rather
+        # than a full _start_level() - a timeout is still the SAME level
+        # attempt, so the maze and any pacgums already eaten must stay
+        # exactly as they were, not reset.
         if self.time_up_freeze_until is not None:
             if pygame.time.get_ticks() < self.time_up_freeze_until:
                 return False
             self.time_up_freeze_until = None
-            if not self._start_level():
-                return True
+            self.player.lives -= 1
+            if self.player.lives <= 0:
+                self.player.game_over_time = pygame.time.get_ticks()
+                return False
+            self._restart_level_in_place()
             return False
 
         # --- Task 5.5: ghost caught Pac-Man, frozen beat before retrying ---
@@ -202,9 +221,11 @@ class GameDemo:
 
         # --- Task 6.1: per-level countdown timer ---
         # DECISION (documented here per the subtask): running out of time
-        # never costs a life or ends the run - it just regenerates the SAME
-        # level with a fresh maze/pacgums/ghosts/timer, no matter how many
-        # times it happens. Only ghost contact (Task 5.5) costs lives.
+        # costs a life and regenerates the SAME level with a fresh
+        # maze/pacgums/ghosts/timer - it does NOT end the run outright.
+        # This mirrors ghost contact exactly, so "you failed this level in
+        # time" and "a ghost caught you" both just cost one of the same
+        # pool of lives, and only running out of lives ends the game.
         # Checked BEFORE the player/ghosts move this frame, so the freeze
         # above genuinely holds the exact frame the timer expired - nobody
         # gets one extra step in before it kicks in.

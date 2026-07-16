@@ -40,15 +40,14 @@ class Player:
         self.direction = None
         self.wanted_direction = None
 
-        # The speed must divide the cell size evenly. If it didn't, pacman
-        # would step OVER the exact alignment point between two cells and
-        # the "am I aligned?" check below would never be true again, so he
-        # could never turn or be stopped by a wall.
-        self.speed = 1
-        for candidate in range(max(1, cell // 6), 0, -1):
-            if cell % candidate == 0:
-                self.speed = candidate
-                break
+        # NEW: pacman needs to actually be able to clear a whole maze's
+        # worth of pacgums (450+ corridor cells) inside level_max_time.
+        # `speed` no longer has to evenly divide `cell` (it often can't -
+        # e.g. this maze's 19px cells are prime, so the only divisors are 1
+        # and the full cell) because update() now moves 1px at a time,
+        # `speed` times per frame, checking alignment/walls at every single
+        # pixel - see update().
+        self.speed = 3
 
         # *************ANIMATION SET-UP *****************
         # Load pacman images: open, half-open, closed
@@ -143,33 +142,43 @@ class Player:
         if self.game_over_time:
             return pygame.time.get_ticks() - self.game_over_time >= 4000
 
-        # A 180° turn is always allowed, even in the middle of a corridor -
-        # the cell behind pacman is the one he just came from, so it must
-        # be free. Every OTHER turn has to wait for grid alignment below.
-        if (
-            self.direction
-            and self.wanted_direction == _OPPOSITE[self.direction]
-        ):
-            self.direction = self.wanted_direction
-
-        # "Aligned" = pixel position sits exactly on a cell boundary. This
-        # is the only moment a turn or a wall-stop can happen, which is what
-        # keeps pacman perfectly centred in the corridors.
-        aligned = (
-            (self.x - self.offset_x) % self.cell == 0
-            and (self.y - self.offset_y) % self.cell == 0
-        )
-        if aligned:
-            if self.wanted_direction and self._can_go(self.wanted_direction):
+        # NEW: move 1px at a time, `self.speed` times per frame, instead of
+        # one lump of `speed` pixels. Turning/wall-stopping only happens at
+        # an exact cell-boundary alignment, so checking it after every
+        # single pixel (rather than once per frame) means `speed` can be
+        # any integer - it never needs to evenly divide `cell`, and it can
+        # never skip past an alignment point no matter how large it is.
+        for _ in range(self.speed):
+            # A 180° turn is always allowed, even mid-corridor - the cell
+            # behind pacman is the one he just came from, so it must be
+            # free. Every OTHER turn has to wait for grid alignment below.
+            if (
+                self.direction
+                and self.wanted_direction == _OPPOSITE[self.direction]
+            ):
                 self.direction = self.wanted_direction
-            if self.direction and not self._can_go(self.direction):
-                self.direction = None  # wall ahead: stop and wait
+
+            # "Aligned" = pixel position sits exactly on a cell boundary.
+            # This is the only moment a turn or a wall-stop can happen,
+            # which is what keeps pacman perfectly centred in corridors.
+            aligned = (
+                (self.x - self.offset_x) % self.cell == 0
+                and (self.y - self.offset_y) % self.cell == 0
+            )
+            if aligned:
+                if self.wanted_direction and self._can_go(self.wanted_direction):
+                    self.direction = self.wanted_direction
+                if self.direction and not self._can_go(self.direction):
+                    self.direction = None  # wall ahead: stop and wait
+
+            if not self.direction:
+                break  # nothing to do - stop sub-stepping early
+
+            dx, dy = _DIRECTIONS[self.direction]
+            self.x += dx
+            self.y += dy
 
         if self.direction:
-            dx, dy = _DIRECTIONS[self.direction]
-            self.x += dx * self.speed
-            self.y += dy * self.speed
-
             # --- animation timer: switch mouth frame every 150ms ---
             # Only animated while moving, so a stopped pacman doesn't chew air.
             now = pygame.time.get_ticks()
