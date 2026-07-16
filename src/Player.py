@@ -92,6 +92,18 @@ class Player:
     def is_invincible(self):
         return pygame.time.get_ticks() < self.invincible_until
 
+    # NEW (Task 8.4): pause support. Every one of the player's timers is an
+    # ABSOLUTE get_ticks() timestamp, and the wall clock keeps running while
+    # the game is paused. Pushing each timestamp forward by the paused
+    # duration makes them behave as if no time passed at all: the invincible
+    # window, the animation timer, and the game-over screen all resume exactly
+    # where they left off.
+    def shift_time(self, delta):
+        self.invincible_until += delta
+        self.last_switch += delta
+        if self.game_over_time:
+            self.game_over_time += delta
+
     # NEW: pixel position -> grid cell. Uses the CENTRE of the sprite so
     # the answer doesn't flip early while pacman is between two cells.
     # GameDemo also calls this every frame to know which pacgum to eat.

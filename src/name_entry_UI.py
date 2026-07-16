@@ -26,7 +26,7 @@ def _load_font(path, size):
 # Task 7.3: the name-entry screen shown after Game Over / Victory. It runs
 # its own small blocking loop (the same style as the rest of the game's
 # screens today) and only returns once the player has either saved a name or
-# skipped. On return, main_menu_UI shows the main menu again.
+# skipped. On return, app.py shows the main menu again.
 #
 # DECISION (documented per the subtask): the save at game end is guaranteed
 # to be REACHED on both endings - GameDemo routes every finished game through

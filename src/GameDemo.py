@@ -33,6 +33,12 @@ _TIME_UP_FREEZE_MS = 1000
 # SAME level (grid + remaining pacgums untouched, only positions reset).
 _GHOST_DEATH_FREEZE_MS = 1000
 
+# NEW (Task 8.3): height in pixels of the HUD bar reserved at the top of the
+# screen. The maze layout is told to keep this strip clear (see the
+# get_layout/maze.draw calls), so the score/lives/level/time line drawn into
+# it can never overlap the maze below.
+_HUD_HEIGHT = 60
+
 
 # CHANGED (Phase 4): GameDemo is no longer a thin wrapper around Player -
 # it is now the real game screen. It owns the maze, the pacgums, the score
@@ -110,7 +116,7 @@ class GameDemo:
             print("Error: could not generate the maze, returning to menu.")
             return False
 
-        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid)
+        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid, _HUD_HEIGHT)
 
         # Lives carry over between levels: the very first call (no player
         # yet) pulls the starting count from the config, every later call -
@@ -152,13 +158,42 @@ class GameDemo:
     # before movement resumes, same as any other level (re)start.
     def _restart_level_in_place(self):
         self.player.respawn()
-        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid)
+        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid, _HUD_HEIGHT)
         self.ghosts = GhostManager(self.screen, self.grid, cell, offset_x, offset_y)
         self.fright_until = 0
 
         now = pygame.time.get_ticks()
         self.countdown_until = now + _READY_COUNTDOWN_MS
         self.level_start_time = self.countdown_until
+
+    # NEW (Task 8.4): can the player pause right now? Not during the game-over
+    # or victory takeover screens, and not on a failed level - only during
+    # real play (including the "Ready" countdown, which pauses fine).
+    def is_pausable(self):
+        return (
+            not self.failed
+            and not self.victory_time
+            and not self.player.game_over_time
+        )
+
+    # NEW (Task 8.4): every deadline this screen tracks is an absolute
+    # get_ticks() timestamp. When the game is un-paused, app.py calls this
+    # with exactly how long the pause lasted, and we slide every timestamp
+    # forward by that amount - the ready countdown, the level timer, the
+    # fright window and both freeze timers - then fan the same shift out to
+    # the player and the ghosts. Net effect: the pause consumed zero game time.
+    def shift_time(self, delta):
+        self.countdown_until += delta
+        self.level_start_time += delta
+        self.fright_until += delta
+        if self.victory_time:
+            self.victory_time += delta
+        if self.time_up_freeze_until is not None:
+            self.time_up_freeze_until += delta
+        if self.ghost_death_freeze_until is not None:
+            self.ghost_death_freeze_until += delta
+        self.player.shift_time(delta)
+        self.ghosts.shift_time(delta)
 
     def handle_event(self, event):
         self.player.handle_event(event)
@@ -294,23 +329,43 @@ class GameDemo:
             self._draw_center_text(str(remaining_s), color=(255, 255, 255))
             return
 
-        # Draw order = layers: maze fills the background, pacgums sit in the
-        # corridors, ghosts on top of those, pacman above the ghosts (so he
-        # stays visible on overlap), HUD text above everything.
-        self.maze.draw(self.screen, self.grid)
+        # Draw order = layers: maze fills the background (kept clear of the
+        # top HUD strip via _HUD_HEIGHT), pacgums sit in the corridors, ghosts
+        # on top of those, pacman above the ghosts (so he stays visible on
+        # overlap), HUD text above everything.
+        self.maze.draw(self.screen, self.grid, _HUD_HEIGHT)
         self.pacgums.draw(self.screen)
         self.ghosts.draw(self.screen)
         self.player.draw()
 
-        # Task 4.2/6.1: live score + time display (a proper HUD with full
-        # layout comes in Phase 8).
-        time_left = max(0, self.config.level_max_time - (pygame.time.get_ticks() - self.level_start_time) // 1000)
-        hud = self.hud_font.render(
-            f"Score {self.score}  Level {self.level}  Lives {self.player.lives}  Time {time_left}",
-            False,
-            (255, 255, 0),
+        self._draw_hud()
+
+    # NEW (Task 8.3): the HUD - score, level, lives and remaining time - laid
+    # out across the reserved top strip. Because get_layout()/maze.draw() were
+    # given _HUD_HEIGHT as a top margin, the maze starts BELOW this strip, so
+    # nothing here can ever overlap the maze.
+    def _draw_hud(self):
+        time_left = max(
+            0,
+            self.config.level_max_time
+            - (pygame.time.get_ticks() - self.level_start_time) // 1000,
         )
-        self.screen.blit(hud, (10, 10))
+        items = [
+            f"SCORE {self.score}",
+            f"LEVEL {self.level}",
+            f"LIVES {self.player.lives}",
+            f"TIME {time_left}",
+        ]
+        screen_width = self.screen.get_width()
+        # Give each item an equal horizontal slice of the bar and centre it
+        # within that slice, so the four readouts stay evenly spread at any
+        # screen width.
+        slice_width = screen_width / len(items)
+        for index, text in enumerate(items):
+            surface = self.hud_font.render(text, False, (255, 255, 0))
+            x = slice_width * index + (slice_width - surface.get_width()) / 2
+            y = (_HUD_HEIGHT - surface.get_height()) / 2
+            self.screen.blit(surface, (x, y))
 
     # NEW: victory screen, same style as the Game Over screen. Sized at 120
     # (not 300) so the longer text still fits on smaller screens. Also
