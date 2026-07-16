@@ -3,6 +3,8 @@ import pygame
 import sys
 from src.pacman_images import ImageElement
 from src.GameDemo import GameDemo
+from src.highscore import HighscoreManager
+from src.name_entry_UI import run_name_entry
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
@@ -14,6 +16,55 @@ def load_path(path, size):
         print(f"Error: font file '{path}' not found. Cannot start the game.")
         pygame.quit()
         sys.exit(1)
+
+
+# Task 7 verification screen (a minimal take on Task 8.7): read the saved
+# highscores through the manager and list them, so the whole save/load cycle
+# is actually visible in-game. Runs its own small blocking loop, same style
+# as run_name_entry, and returns to the menu on Esc/Enter.
+def run_highscores(screen, config):
+    font_title = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 70)
+    font_row = load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 34)
+
+    # Building the manager here reloads the file from disk, so the list is
+    # always current even right after a game just saved to it.
+    scores = HighscoreManager(config.highscore_file).get_top10()
+
+    clock = pygame.time.Clock()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
+                return
+
+        screen.fill((0, 0, 0))
+        width, height = screen.get_size()
+
+        title = font_title.render("HIGH SCORES", False, (255, 255, 0))
+        screen.blit(title, title.get_rect(center=(width / 2, 140)))
+
+        if not scores:
+            # Task 8.7 edge case worth handling now: never show a blank box.
+            empty = font_row.render("No scores yet", False, (120, 120, 120))
+            screen.blit(empty, empty.get_rect(center=(width / 2, height / 2)))
+        else:
+            # enumerate(..., start=1) gives the rank (1..10) alongside each
+            # entry; the rows are drawn one under the other from a fixed top.
+            for rank, entry in enumerate(scores, start=1):
+                row = font_row.render(
+                    f"{rank:2d}.  {entry['name']:<10}  {entry['score']}",
+                    False,
+                    (90, 140, 255),
+                )
+                screen.blit(row, row.get_rect(centerx=width / 2, top=260 + (rank - 1) * 50))
+
+        hint = font_row.render("ESC = back", False, (120, 120, 120))
+        screen.blit(hint, hint.get_rect(center=(width / 2, height - 100)))
+
+        pygame.display.flip()
+        clock.tick(60)
 
 
 def run_main_menu(config):
@@ -93,7 +144,16 @@ def run_main_menu(config):
             game.draw()
             pygame.display.flip()
             if game_over:
+                # Task 7.2/7.3: the game just finished (win OR lose). Capture
+                # its final score and whether the maze had failed to build,
+                # THEN drop the game object. A failed maze never really played,
+                # so it skips straight back to the menu with no name entry;
+                # every genuine ending routes through the name-entry save flow.
+                final_score = game.score
+                failed = game.failed
                 game = None
+                if not failed:
+                    run_name_entry(screen, final_score, config)
         else:
             # --- IN MENU ---
             pygame.mouse.set_visible(True)
@@ -112,7 +172,8 @@ def run_main_menu(config):
                     if start_game_box.collidepoint(event.pos):
                         game = GameDemo(screen, config)
                     if high_scores_box.collidepoint(event.pos):
-                        print("Placeholder")
+                        # Task 7 / 8.7: open the saved highscore table.
+                        run_highscores(screen, config)
             screen.fill(BG_COLOR)
             pygame.draw.rect(
                 screen, BORDER_COLOR, panel_rect,
