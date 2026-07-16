@@ -275,7 +275,7 @@ This plan follows the order you should actually build the project in, from where
 - [ ] Return to Main Menu after save
 
 ### Task 8.6 — Victory screen
-**What it brings:** Required win-condition screen.
+**What it brings:** Required win-condition screen.also want to change the speed of the ghosts in flee mode 
 **Subtasks:**
 - [ ] Show congratulatory message + final score
 - [ ] Trigger name-entry flow (Task 7.3)
