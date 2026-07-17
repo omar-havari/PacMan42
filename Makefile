@@ -2,12 +2,13 @@
 
 install:
 	pip install -r requirements.txt
+	pip install mazegenerator-00001-py3-none-any.whl
 
 run:
-	python src/main_menu_UI.py
+	python pac-man.py config.json
 
 debug:
-	python -m pdb src/main_menu_UI.py
+	python -m pdb pac-man.py config.json
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
