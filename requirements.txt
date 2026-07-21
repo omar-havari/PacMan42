@@ -2,3 +2,6 @@ pygame
 mypy
 flake8
 pytest
+# Local maze-generator wheel shipped in the repo (not on PyPI). Required to
+# run the game - the maze generation depends on it.
+./mazegenerator-00001-py3-none-any.whl

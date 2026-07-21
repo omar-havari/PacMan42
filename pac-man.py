@@ -1,4 +1,11 @@
+"""Command-line entry point: validate the args and launch the game.
+
+Usage::
+
+    python pac-man.py config.json
+"""
 import sys
+
 from src.config import Config
 from src.app import run_game
 

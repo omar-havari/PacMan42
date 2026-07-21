@@ -1,25 +1,38 @@
-import sys
-import pygame
+"""Pac-Man himself: cell-snapped movement, animation, lives and respawns.
+
+The player lives INSIDE the maze - it receives the grid plus the layout numbers
+(cell size and letterbox offsets) so its pixel position always lines up with
+the walls drawn on screen.
+"""
 import os
+import sys
+from typing import List, Optional, Tuple
+
+import pygame
 
 from src.movement import _DIRECTIONS, _OPPOSITE
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
-# NEW (Task 3.3/5.5): short grace period after respawning where ghost
-# contact can't cost another life - without it, respawning back into a
-# ghost's current cell (or one it reaches a frame later) could chain into
-# an instant second death.
+# NEW (Task 3.3/5.5): short grace period after respawning where ghost contact
+# can't cost another life - without it, respawning back into a ghost's cell
+# could chain into an instant second death.
 _INVINCIBILITY_MS = 1000
 
 
 class Player:
-    # CHANGED (Phase 4 prerequisite = Tasks 3.2/3.3): the player now lives
-    # INSIDE the maze. It receives the grid plus the layout numbers
-    # (cell size and letterbox offsets) from MazeLoader.get_layout(), so
-    # its pixel position always lines up with the walls drawn on screen.
-    def __init__(self, screen, lives, grid, cell, offset_x, offset_y):
+    """The player sprite: movement, animation, lives and the game-over screen."""
 
+    def __init__(
+        self,
+        screen: pygame.Surface,
+        lives: int,
+        grid: List[List[str]],
+        cell: int,
+        offset_x: int,
+        offset_y: int,
+    ) -> None:
+        """Build the player inside the maze and spawn it at the centre."""
         self.screen = screen
         self.grid = grid
         self.cell = cell
@@ -28,54 +41,82 @@ class Player:
 
         self.current_frame = 0
         self.last_switch = pygame.time.get_ticks()
-        self.lives = lives  # Number of lives
-        self.game_over_time = None
+        self.lives = lives
+        self.game_over_time: Optional[int] = None
 
-        # Movement is CELL-SNAPPED: pacman travels from cell centre to cell
-        # centre. "direction" is where he is going right now,
-        # "wanted_direction" is the last arrow key pressed. The wanted turn
-        # is applied the moment he is aligned with the grid AND the target
-        # cell is a corridor - exactly like the arcade game, where you can
-        # press "up" early and pacman turns at the next junction.
-        self.direction = None
-        self.wanted_direction = None
+        # Movement is CELL-SNAPPED: Pac-Man travels from cell centre to cell
+        # centre. "direction" is where he is going now, "wanted_direction" is
+        # the last arrow pressed, applied the moment he is aligned AND the
+        # target cell is a corridor - exactly like the arcade game.
+        self.direction: Optional[str] = None
+        self.wanted_direction: Optional[str] = None
 
-        # The speed must divide the cell size evenly. If it didn't, pacman
-        # would step OVER the exact alignment point between two cells and
-        # the "am I aligned?" check below would never be true again, so he
-        # could never turn or be stopped by a wall.
+        # The speed must divide the cell size evenly, or Pac-Man would step
+        # OVER the exact alignment point between two cells and could never turn
+        # or be stopped by a wall again.
         self.speed = 1
         for candidate in range(max(1, cell // 6), 0, -1):
             if cell % candidate == 0:
                 self.speed = candidate
                 break
 
-        # *************ANIMATION SET-UP *****************
-        # Load pacman images: open, half-open, closed
+        # NEW (Task 9.1 - speed-boost cheat): how many base-speed steps to take
+        # per frame. 1 = normal, 2 = the speed-boost cheat. Boosting by taking
+        # extra WHOLE base-speed steps (instead of a bigger single step) keeps
+        # the alignment invariant intact: the base speed is guaranteed to divide
+        # the cell size, so every sub-step still lands exactly on the grid.
+        self.steps_per_frame = 1
+
+        # --- animation set-up: open, half-open, closed mouth frames ---
         figure_paths = [
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-14-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-23-removebg-preview.png'),
-            os.path.join(_ASSETS, 'images', 'Screenshot_From_2026-07-10_12-31-34-removebg-preview.png'),
+            os.path.join(
+                _ASSETS, 'images',
+                'Screenshot_From_2026-07-10_12-31-14-removebg-preview.png'
+            ),
+            os.path.join(
+                _ASSETS, 'images',
+                'Screenshot_From_2026-07-10_12-31-23-removebg-preview.png'
+            ),
+            os.path.join(
+                _ASSETS, 'images',
+                'Screenshot_From_2026-07-10_12-31-34-removebg-preview.png'
+            ),
         ]
 
-        self.frames = [
-            pygame.image.load(figure_paths[0]).convert_alpha(),
-            pygame.image.load(figure_paths[1]).convert_alpha(),
-            pygame.image.load(figure_paths[2]).convert_alpha(),
-        ]
-        # CHANGED: frames are scaled to the maze cell size instead of a
-        # fixed 150x150, so pacman fits inside a corridor at any resolution.
-        self.frames = [
-            pygame.transform.scale(frame, (self.cell, self.cell))
-            for frame in self.frames
-        ]
+        # Task 10.4: a missing sprite must not crash the game. If any frame
+        # fails to load, fall back to a plain yellow circle (same graceful
+        # degradation the pac-gums and ghosts already use). Scale to the maze
+        # cell size (not a fixed 150x150) so Pac-Man fits a corridor at any
+        # resolution.
+        self.frames: List[pygame.Surface] = self._load_frames(figure_paths)
 
         self.respawn()
 
-    # NEW (Task 3.3): spawn/respawn in the middle of the maze. The expanded
-    # grid always has odd dimensions and every odd row/column index is a
-    # corridor, so the exact centre cell is guaranteed to be walkable.
-    def respawn(self):
+    def _load_frames(self, figure_paths: List[str]) -> List[pygame.Surface]:
+        """Load and scale the three mouth frames, or a circle fallback."""
+        try:
+            raw_frames = [
+                pygame.image.load(p).convert_alpha() for p in figure_paths
+            ]
+            return [
+                pygame.transform.scale(frame, (self.cell, self.cell))
+                for frame in raw_frames
+            ]
+        except (FileNotFoundError, pygame.error):
+            print("Warning: Pac-Man images not found, using a plain circle.")
+            fallback = pygame.Surface((self.cell, self.cell), pygame.SRCALPHA)
+            pygame.draw.circle(
+                fallback, (255, 255, 0),
+                (self.cell // 2, self.cell // 2), self.cell // 2
+            )
+            return [fallback, fallback, fallback]
+
+    def respawn(self) -> None:
+        """Place Pac-Man at the maze centre with a brief invincibility window.
+
+        The expanded grid always has odd dimensions and every odd row/column
+        index is a corridor, so the exact centre cell is guaranteed walkable.
+        """
         row = len(self.grid) // 2
         col = len(self.grid[0]) // 2
         self.x = self.offset_x + col * self.cell
@@ -83,39 +124,44 @@ class Player:
         self.direction = None
         self.wanted_direction = None
         self.rotated = self.frames[self.current_frame]
-        # NEW (Task 3.3/5.5): brief invincibility so respawning doesn't
-        # immediately chain into another ghost-contact death.
+        # Brief invincibility so respawning doesn't chain into another death.
         self.invincible_until = pygame.time.get_ticks() + _INVINCIBILITY_MS
 
-    # NEW (Task 5.5): used by GameDemo before charging a ghost-contact life
-    # loss, so the respawn grace period above actually does something.
-    def is_invincible(self):
+    def is_invincible(self) -> bool:
+        """Return ``True`` during the post-respawn grace period."""
         return pygame.time.get_ticks() < self.invincible_until
 
-    # NEW (Task 8.4): pause support. Every one of the player's timers is an
-    # ABSOLUTE get_ticks() timestamp, and the wall clock keeps running while
-    # the game is paused. Pushing each timestamp forward by the paused
-    # duration makes them behave as if no time passed at all: the invincible
-    # window, the animation timer, and the game-over screen all resume exactly
-    # where they left off.
-    def shift_time(self, delta):
+    def set_speed_boost(self, on: bool) -> None:
+        """Turn the speed-boost cheat on or off (2 base-speed steps per frame).
+
+        Boosting via extra whole steps (rather than a bigger single step) means
+        alignment is never broken - see ``steps_per_frame`` in ``__init__``.
+        """
+        self.steps_per_frame = 2 if on else 1
+
+    def shift_time(self, delta: int) -> None:
+        """Slide every absolute timer forward by ``delta`` ms (pause support).
+
+        The invincibility window, the animation timer, and the game-over screen
+        all resume exactly where they left off, as if no time passed.
+        """
         self.invincible_until += delta
         self.last_switch += delta
         if self.game_over_time:
             self.game_over_time += delta
 
-    # NEW: pixel position -> grid cell. Uses the CENTRE of the sprite so
-    # the answer doesn't flip early while pacman is between two cells.
-    # GameDemo also calls this every frame to know which pacgum to eat.
-    def current_cell(self):
+    def current_cell(self) -> Tuple[int, int]:
+        """Return the ``(row, col)`` cell Pac-Man's centre is in."""
         row = (self.y + self.cell // 2 - self.offset_y) // self.cell
         col = (self.x + self.cell // 2 - self.offset_x) // self.cell
         return (row, col)
 
-    # NEW (Task 3.2): "can pacman leave his current cell in that direction?"
-    # This is the whole wall-collision system - movement only ever starts
-    # toward a neighbouring CORRIDOR cell, so walls are simply never entered.
-    def _can_go(self, direction):
+    def _can_go(self, direction: str) -> bool:
+        """Return ``True`` if the neighbouring cell in ``direction`` is a corridor.
+
+        This is the whole wall-collision system - movement only ever starts
+        toward a neighbouring corridor cell, so walls are simply never entered.
+        """
         dx, dy = _DIRECTIONS[direction]
         row, col = self.current_cell()
         r, c = row + dy, col + dx
@@ -125,9 +171,8 @@ class Player:
             and self.grid[r][c] == "CORRIDOR"
         )
 
-    # NEW: small helper so we don't repeat the same try/except every time
-    # we need to load a font. Added "self" since it's a method now.
-    def load_path(self, path, size):
+    def load_path(self, path: str, size: int) -> pygame.font.Font:
+        """Load a font, exiting cleanly (no traceback) if the file is missing."""
         try:
             return pygame.font.Font(path, size)
         except FileNotFoundError:
@@ -135,10 +180,12 @@ class Player:
             pygame.quit()
             sys.exit(1)
 
-    # CHANGED: arrow keys no longer change direction instantly - they only
-    # record the WISH. update() decides when the turn actually happens
-    # (next time pacman is aligned with the grid and the way is free).
-    def handle_event(self, event):
+    def handle_event(self, event: pygame.event.Event) -> None:
+        """Record the last arrow key pressed as the WISHED direction.
+
+        The turn itself happens later in :meth:`update`, the next time Pac-Man
+        is aligned with the grid and the way is free.
+        """
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.wanted_direction = "left"
@@ -149,24 +196,36 @@ class Player:
             elif event.key == pygame.K_DOWN:
                 self.wanted_direction = "down"
 
-    def update(self):
-        # --- has the 4-second game-over screen finished showing? ---
+    def update(self) -> bool:
+        """Advance Pac-Man one frame; return ``True`` when the game should end.
+
+        Takes ``steps_per_frame`` base-speed steps (normally 1; the speed-boost
+        cheat makes it 2). Each step is a full base-speed move that divides the
+        cell, so boosting never skips a grid-alignment point.
+        """
         # While the game-over screen is up, nothing else should move.
         if self.game_over_time:
             return pygame.time.get_ticks() - self.game_over_time >= 4000
 
-        # A 180° turn is always allowed, even in the middle of a corridor -
-        # the cell behind pacman is the one he just came from, so it must
-        # be free. Every OTHER turn has to wait for grid alignment below.
+        for _ in range(self.steps_per_frame):
+            self._step()
+
+        # The maze border is a solid ring of WALL cells, so leaving the screen
+        # is impossible; lives are lost to ghosts (Phase 5), not to bounds.
+        return False
+
+    def _step(self) -> None:
+        """Perform one base-speed movement step (turn logic + move + animate)."""
+        # A 180 turn is always allowed, even mid-corridor - the cell behind is
+        # the one just left, so it must be free. Other turns wait for alignment.
         if (
             self.direction
             and self.wanted_direction == _OPPOSITE[self.direction]
         ):
             self.direction = self.wanted_direction
 
-        # "Aligned" = pixel position sits exactly on a cell boundary. This
-        # is the only moment a turn or a wall-stop can happen, which is what
-        # keeps pacman perfectly centred in the corridors.
+        # "Aligned" = pixel position sits exactly on a cell boundary. The only
+        # moment a turn or wall-stop can happen, keeping Pac-Man centred.
         aligned = (
             (self.x - self.offset_x) % self.cell == 0
             and (self.y - self.offset_y) % self.cell == 0
@@ -182,42 +241,32 @@ class Player:
             self.x += dx * self.speed
             self.y += dy * self.speed
 
-            # --- animation timer: switch mouth frame every 150ms ---
-            # Only animated while moving, so a stopped pacman doesn't chew air.
+            # Animation timer: switch mouth frame every 150ms, only while moving.
             now = pygame.time.get_ticks()
             if now - self.last_switch >= 150:
                 self.current_frame = (self.current_frame + 1) % 3
                 self.last_switch = now
 
-            # --- pick the correct rotated frame for the direction ---
+            # Pick the correct rotated frame for the direction.
+            frame = self.frames[self.current_frame]
             if self.direction == "right":
-                self.rotated = self.frames[self.current_frame]
+                self.rotated = frame
             elif self.direction == "left":
-                self.rotated = pygame.transform.flip(self.frames[self.current_frame], True, False)
+                self.rotated = pygame.transform.flip(frame, True, False)
             elif self.direction == "up":
-                self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 90)
+                self.rotated = pygame.transform.rotate(frame, 90)
             elif self.direction == "down":
-                self.rotated = pygame.transform.rotate(self.frames[self.current_frame], 270)
+                self.rotated = pygame.transform.rotate(frame, 270)
 
-        # NOTE: the old "out of screen bounds -> lose_life" checks are gone.
-        # The maze border is a solid ring of WALL cells, so leaving the
-        # screen is impossible now. Lives are lost to ghosts (Phase 5).
-
-        return False      # still playing
-
-    # CHANGED: draw() no longer fills the screen black - the maze is drawn
-    # first by GameDemo and fills the background itself. Pacman only blits
-    # his own sprite on top.
-    def draw(self):
+    def draw(self) -> None:
+        """Blit Pac-Man's sprite, or the full-screen Game Over text if dead."""
         screen_width, screen_height = self.screen.get_size()
 
         if self.game_over_time:
-            game_over_font = self.load_path(os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300)
-            game_over = game_over_font.render(
-                "Game Over",
-                False,
-                (255, 255, 0)
+            game_over_font = self.load_path(
+                os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300
             )
+            game_over = game_over_font.render("Game Over", False, (255, 255, 0))
             game_over_box = game_over.get_rect(
                 center=(screen_width / 2, screen_height / 2)
             )

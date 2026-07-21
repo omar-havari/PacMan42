@@ -1,21 +1,37 @@
+"""The persistent highscore store (Tasks 7.1 / 7.2).
+
+:class:`HighscoreManager` is the ONLY thing that ever touches the highscore
+file on disk - every screen that reads or writes scores goes through it, so the
+file format lives in exactly one place. It is hardened against a missing,
+corrupt or wrong-shaped file: it never raises, it just warns and starts fresh.
+"""
 import json
+from typing import Any, Dict, List
+
+Score = Dict[str, Any]
 
 
-# Task 7.1/7.2: the persistent highscore store. This class is the ONLY thing
-# that ever touches the highscore file on disk - every screen that needs to
-# read or write scores goes through it, so the file format lives in exactly
-# one place.
 class HighscoreManager:
-    # CHANGED (Task 7.1): the filename is no longer hardcoded - it comes from
-    # the config's "highscore_file" key (passed in by whoever builds the
-    # manager). The default is only a fallback for when no config value is
-    # supplied. load() runs immediately so self.scores is ready to use.
-    def __init__(self, filename="highscores.json"):
-        self.filename = filename
-        self.scores = self.load()
+    """Loads, validates, and persists the top-10 highscore table."""
 
-    # Task 7.2: read the file and survive anything wrong with it.
-    def load(self):
+    def __init__(self, filename: str = "highscores.json") -> None:
+        """Build the manager and immediately load the table from disk.
+
+        Args:
+            filename: Path to the JSON highscore file. Normally supplied from
+                the config's ``highscore_file`` key; the default is only a
+                fallback for when no config value is given.
+        """
+        self.filename = filename
+        self.scores: List[Score] = self.load()
+
+    def load(self) -> List[Score]:
+        """Read the file and return a clean, sorted, top-10 list of scores.
+
+        Survives every failure mode: a missing file (first run) returns an
+        empty list, a corrupt/unreadable file warns and returns empty, and a
+        wrong-shaped or partially-garbage file keeps only the well-formed rows.
+        """
         try:
             with open(self.filename, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -29,14 +45,13 @@ class HighscoreManager:
             print("Warning: highscore file corrupted, starting fresh.")
             return []
 
-        # NEW (Task 7.2): the JSON parsed, but it might still be the wrong
-        # SHAPE (e.g. someone put a number or an object in the file). Keep
-        # only well-formed {"name": str, "score": int} entries and drop the
-        # rest, so the rest of the game can trust self.scores completely.
+        # The JSON parsed, but it might still be the wrong SHAPE (e.g. a number
+        # or an object). Keep only well-formed {"name": str, "score": int}
+        # entries and drop the rest, so the game can fully trust self.scores.
         if not isinstance(data, list):
             print("Warning: highscore file has unexpected format, starting fresh.")
             return []
-        clean = []
+        clean: List[Score] = []
         for entry in data:
             if (
                 isinstance(entry, dict)
@@ -49,33 +64,40 @@ class HighscoreManager:
         clean.sort(key=lambda x: x["score"], reverse=True)
         return clean[:10]
 
-    # Task 7.1: write the current table back to disk as JSON.
-    def save(self):
-        # Task 7.2/10.4: never let a disk error crash the game at exit.
+    def save(self) -> None:
+        """Write the current table back to disk as pretty-printed JSON.
+
+        A disk error at save time (disk full, read-only folder, ...) is caught
+        and warned about rather than allowed to crash the game as it exits.
+        """
         try:
             with open(self.filename, "w", encoding="utf-8") as f:
                 json.dump(self.scores, f, indent=2)
         except OSError:
             print("Warning: could not save highscores.")
 
-    # Task 7.1: a valid name is a string, 1-10 characters, made only of
-    # letters/digits/spaces. CHANGED: the cap was 20 - the plan requires 10.
-    def _valid_name(self, name):
+    def _valid_name(self, name: Any) -> bool:
+        """Return ``True`` for a 1-10 char alphanumeric-or-space string."""
         return (
             isinstance(name, str)
             and 0 < len(name) <= 10
             and all(c.isalnum() or c == " " for c in name)
         )
 
-    # Task 7.1: a valid score is a non-negative integer. bool is excluded
-    # because in Python True/False are ints - a stray boolean shouldn't count.
-    def _valid_score(self, score):
+    def _valid_score(self, score: Any) -> bool:
+        """Return ``True`` for a non-negative, non-boolean integer.
+
+        ``bool`` is excluded because in Python ``True``/``False`` are ints - a
+        stray boolean should not count as a score.
+        """
         return isinstance(score, int) and not isinstance(score, bool) and score >= 0
 
-    # Task 7.1: add one result, keep the table sorted and capped at 10, then
-    # persist. Invalid input is ignored rather than raising, so a bad name
-    # can never crash the end-of-game flow.
-    def add(self, name, score):
+    def add(self, name: str, score: int) -> None:
+        """Add one result, keep the table sorted and capped at 10, then save.
+
+        Invalid input is ignored rather than raising, so a bad name can never
+        crash the end-of-game flow.
+        """
         if not self._valid_name(name) or not self._valid_score(score):
             return
         self.scores.append({"name": name, "score": score})
@@ -83,6 +105,6 @@ class HighscoreManager:
         self.scores = self.scores[:10]
         self.save()
 
-    # Task 7.1: the top 10, already sorted descending by add()/load().
-    def get_top10(self):
+    def get_top10(self) -> List[Score]:
+        """Return the top 10 scores, already sorted descending."""
         return self.scores[:10]

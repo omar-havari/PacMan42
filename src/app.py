@@ -1,24 +1,32 @@
+"""The single ``GameState``-driven main loop for the whole game (Task 8.1).
+
+One :class:`App` object owns the window, a :class:`~src.game_state.GameState`,
+and every screen, and runs ONE loop that dispatches by state. As of Tasks
+8.5/8.6 no screen owns a ``while`` loop anymore - even the end-of-game name
+entry is a proper state (GAME_OVER / VICTORY) driven from here.
+"""
 import sys
+from typing import List, Optional
 
 import pygame
 
+from src.config import Config
 from src.game_state import GameState
 from src.GameDemo import GameDemo
-from src.name_entry_UI import run_name_entry
 from src.screens import (
     HighscoresScreen,
     InstructionsScreen,
     MainMenu,
+    NameEntryScreen,
     PauseMenu,
 )
 
 
-# Task 8.1: the ONE main loop for the whole game. It holds a GameState and,
-# every frame, dispatches to exactly one screen based on that state. No screen
-# has its own while-loop anymore (except run_name_entry, a temporary bridge
-# until the Game Over / Victory states arrive in Tasks 8.5/8.6).
 class App:
-    def __init__(self, config):
+    """Owns the window and every screen, and runs the one dispatch loop."""
+
+    def __init__(self, config: Config) -> None:
+        """Open a fullscreen window and build the entry (main menu) screen."""
         pygame.init()
         info = pygame.display.Info()
         self.screen = pygame.display.set_mode(
@@ -31,21 +39,23 @@ class App:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # The currently active screen objects. Only the one matching the
-        # state is used each frame; the rest sit idle or are None.
+        # Only the screen matching the current state is used each frame; the
+        # rest sit idle or are None.
         self.menu = MainMenu(self.screen, config)
-        self.game = None
-        self.highscores = None
-        self.instructions = None
-        self.pause_menu = None
+        self.game: Optional[GameDemo] = None
+        self.highscores: Optional[HighscoresScreen] = None
+        self.instructions: Optional[InstructionsScreen] = None
+        self.pause_menu: Optional[PauseMenu] = None
+        # Tasks 8.5/8.6: the shared Game Over / Victory screen (name entry
+        # folded in), active in the GAME_OVER and VICTORY states.
+        self.end_screen: Optional[NameEntryScreen] = None
 
         # Task 8.4 pause bookkeeping.
         self.pause_start = 0
-        self.pause_snapshot = None
+        self.pause_snapshot: Optional[pygame.Surface] = None
 
-    # The single loop. Grab this frame's events once, hand them to whichever
-    # screen is active, then present the frame at 60 FPS.
-    def run(self):
+    def run(self) -> None:
+        """Run the main loop: drain events, dispatch by state, present at 60 FPS."""
         while self.running:
             events = pygame.event.get()
             for event in events:
@@ -58,6 +68,8 @@ class App:
                 self._game_frame(events)
             elif self.state.is_paused():
                 self._pause_frame(events)
+            elif self.state.is_game_over() or self.state.is_victory():
+                self._end_frame(events)
             elif self.state.is_highscores():
                 self._highscores_frame(events)
             elif self.state.is_instructions():
@@ -69,21 +81,22 @@ class App:
         pygame.quit()
         sys.exit()
 
-    # --- MAIN_MENU (Task 8.2) ---
-    def _main_menu_frame(self, events):
+    def _main_menu_frame(self, events: List[pygame.event.Event]) -> None:
+        """Drive the main menu: run any button action, else draw it."""
         pygame.mouse.set_visible(True)
         for event in events:
             action = self.menu.handle_event(event)
             if action:
                 self._run_menu_action(action)
-                # A menu action changes the state (or quits); stop touching
-                # the menu this frame so we don't draw it over the new screen.
+                # A menu action changes the state (or quits); stop touching the
+                # menu this frame so we don't draw it over the new screen.
                 if not self.state.is_main_menu() or not self.running:
                     return
         self.menu.update_hover(pygame.mouse.get_pos())
         self.menu.draw(self.screen)
 
-    def _run_menu_action(self, action):
+    def _run_menu_action(self, action: str) -> None:
+        """Turn a menu action string into a concrete screen + state change."""
         if action == "NEW_GAME":
             self.game = GameDemo(self.screen, self.config)
             self.state.switch_to(GameState.GAME)
@@ -96,13 +109,15 @@ class App:
         elif action == "EXIT":
             self.running = False
 
-    # --- GAME (Tasks 8.1 / 8.3, with pause hook for 8.4) ---
-    def _game_frame(self, events):
+    def _game_frame(self, events: List[pygame.event.Event]) -> None:
+        """Advance and draw the game; enter pause on P/Esc; finish when done."""
+        assert self.game is not None
         pygame.mouse.set_visible(False)
         for event in events:
-            if event.type == pygame.KEYDOWN and event.key in (pygame.K_ESCAPE, pygame.K_p):
-                # Task 8.4: pause, but only when the game is in real play
-                # (not over a game-over/victory takeover screen).
+            if event.type == pygame.KEYDOWN and event.key in (
+                pygame.K_ESCAPE, pygame.K_p
+            ):
+                # Task 8.4: pause, but only during real play.
                 if self.game.is_pausable():
                     self._enter_pause()
                     return
@@ -113,28 +128,52 @@ class App:
         self.game.draw()
 
         if done:
-            # Task 7.3 bridge: a finished game (win or lose) still routes to
-            # the blocking name-entry screen, then back to the menu. Capture
-            # what we need before dropping the game object.
-            score = self.game.score
-            failed = self.game.failed
-            self.game = None
-            if not failed:
-                run_name_entry(self.screen, score, self.config)
-            self._return_to_menu()
+            self._finish_game()
 
-    # --- PAUSE (Task 8.4) ---
-    def _enter_pause(self):
-        # Freeze the exact current frame: draw the game once, snapshot the
-        # pixels, and remember when the pause began so _resume() knows how
-        # much game time to give back.
+    def _finish_game(self) -> None:
+        """Switch to the proper end state once a game finishes.
+
+        A failed maze (never really played) skips straight back to the menu; a
+        real win/lose builds the Game Over / Victory screen (which owns the
+        name-entry flow) and switches to that state - no blocking loop.
+        """
+        assert self.game is not None
+        if self.game.failed:
+            self.game = None
+            self._return_to_menu()
+            return
+        won = self.game.victory_time is not None
+        score = self.game.score
+        self.game = None
+        title = "YOU WIN!" if won else "GAME OVER"
+        self.end_screen = NameEntryScreen(
+            self.screen, score, self.config, title, won
+        )
+        self.state.switch_to(GameState.VICTORY if won else GameState.GAME_OVER)
+
+    def _end_frame(self, events: List[pygame.event.Event]) -> None:
+        """Drive the Game Over / Victory screen; return to menu when done."""
+        assert self.end_screen is not None
+        pygame.mouse.set_visible(True)
+        for event in events:
+            if self.end_screen.handle_event(event) == "DONE":
+                self.end_screen = None
+                self._return_to_menu()
+                return
+        self.end_screen.draw(self.screen)
+
+    def _enter_pause(self) -> None:
+        """Freeze the current frame as a snapshot and open the pause menu."""
+        assert self.game is not None
         self.game.draw()
         self.pause_snapshot = self.screen.copy()
         self.pause_start = pygame.time.get_ticks()
         self.pause_menu = PauseMenu(self.screen)
         self.state.switch_to(GameState.PAUSE)
 
-    def _pause_frame(self, events):
+    def _pause_frame(self, events: List[pygame.event.Event]) -> None:
+        """Draw the frozen snapshot + pause menu; handle Resume / Main Menu."""
+        assert self.pause_menu is not None and self.pause_snapshot is not None
         pygame.mouse.set_visible(True)
         for event in events:
             action = self.pause_menu.handle_event(event)
@@ -147,19 +186,19 @@ class App:
                 self._return_to_menu()
                 return
         self.pause_menu.update_hover(pygame.mouse.get_pos())
-        # Frozen game underneath, then the dim overlay + pause menu on top.
         self.screen.blit(self.pause_snapshot, (0, 0))
         self.pause_menu.draw(self.screen)
 
-    def _resume(self):
-        # Hand the game exactly the time that elapsed while paused, so none of
-        # its timers advanced during the freeze (Task 8.4).
+    def _resume(self) -> None:
+        """Hand the game the paused duration so no timers advanced, then resume."""
+        assert self.game is not None
         paused_ms = pygame.time.get_ticks() - self.pause_start
         self.game.shift_time(paused_ms)
         self.state.switch_to(GameState.GAME)
 
-    # --- HIGHSCORES (early Task 8.7) ---
-    def _highscores_frame(self, events):
+    def _highscores_frame(self, events: List[pygame.event.Event]) -> None:
+        """Drive the highscores screen; return to the menu on BACK."""
+        assert self.highscores is not None
         pygame.mouse.set_visible(True)
         for event in events:
             if self.highscores.handle_event(event) == "BACK":
@@ -167,8 +206,9 @@ class App:
                 return
         self.highscores.draw(self.screen)
 
-    # --- INSTRUCTIONS (Task 8.2 button / early Task 8.8) ---
-    def _instructions_frame(self, events):
+    def _instructions_frame(self, events: List[pygame.event.Event]) -> None:
+        """Drive the instructions screen; return to the menu on BACK."""
+        assert self.instructions is not None
         pygame.mouse.set_visible(True)
         for event in events:
             if self.instructions.handle_event(event) == "BACK":
@@ -176,12 +216,12 @@ class App:
                 return
         self.instructions.draw(self.screen)
 
-    # Rebuild the menu (so its top-scores preview reflects any new save) and
-    # switch back to it.
-    def _return_to_menu(self):
+    def _return_to_menu(self) -> None:
+        """Rebuild the menu (refreshing its score preview) and switch to it."""
         self.menu = MainMenu(self.screen, self.config)
         self.state.switch_to(GameState.MAIN_MENU)
 
 
-def run_game(config):
+def run_game(config: Config) -> None:
+    """Build and run the whole game - the entry point ``pac-man.py`` calls."""
     App(config).run()

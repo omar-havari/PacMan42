@@ -270,30 +270,30 @@ This plan follows the order you should actually build the project in, from where
 ### Task 8.5 — Game Over screen
 **What it brings:** Required end-of-game screen.
 **Subtasks:**
-- [ ] Show final score
-- [ ] Trigger name-entry flow (Task 7.3)
-- [ ] Return to Main Menu after save
+- [x] Show final score
+- [x] Trigger name-entry flow (Task 7.3)
+- [x] Return to Main Menu after save
 
 ### Task 8.6 — Victory screen
 **What it brings:** Required win-condition screen.also want to change the speed of the ghosts in flee mode 
 **Subtasks:**
-- [ ] Show congratulatory message + final score
-- [ ] Trigger name-entry flow (Task 7.3)
-- [ ] Return to Main Menu after save
+- [x] Show congratulatory message + final score
+- [x] Trigger name-entry flow (Task 7.3)
+- [x] Return to Main Menu after save
 
 ### Task 8.7 — Highscores screen
 **What it brings:** Required main-menu feature.
 **Subtasks:**
-- [ ] Display ranked top 10 (position, name, score)
-- [ ] Handle empty list ("No scores yet")
-- [ ] Return to Main Menu
+- [x] Display ranked top 10 (position, name, score)
+- [x] Handle empty list ("No scores yet")
+- [x] Return to Main Menu
 
 ### Task 8.8 — Instructions screen
 **What it brings:** Required main-menu feature; also helps reviewers understand controls quickly.
 **Subtasks:**
-- [ ] List movement controls
-- [ ] Explain pacgum/super-pacgum/ghost mechanics briefly
-- [ ] List cheat mode keys (once Phase 9 exists)
+- [x] List movement controls
+- [x] Explain pacgum/super-pacgum/ghost mechanics briefly
+- [x] List cheat mode keys (once Phase 9 exists)
 
 ---
 
@@ -302,13 +302,13 @@ This plan follows the order you should actually build the project in, from where
 ### Task 9.1 — Implement cheat toggles
 **What it brings:** Required for peer review — reviewers need to test win/lose/ghost behavior quickly without playing a full 90-second level normally.
 **Subtasks:**
-- [ ] Invincibility toggle
-- [ ] Level skip
-- [ ] Ghost freeze
-- [ ] Extra life
-- [ ] Speed boost
-- [ ] Display active cheats on HUD
-- [ ] Document keys in Instructions screen
+- [x] Invincibility toggle
+- [x] Level skip
+- [x] Ghost freeze
+- [x] Extra life
+- [x] Speed boost
+- [x] Display active cheats on HUD
+- [x] Document keys in Instructions screen
 
 ---
 
@@ -317,28 +317,28 @@ This plan follows the order you should actually build the project in, from where
 ### Task 10.1 — Type hints + mypy
 **What it brings:** Hard grading requirement.
 **Subtasks:**
-- [ ] Add type hints to every function/class across all files
-- [ ] Run `mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs`
-- [ ] Fix all reported errors
+- [x] Add type hints to every function/class across all files
+- [x] Run `mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs`
+- [x] Fix all reported errors
 
 ### Task 10.2 — Docstrings (PEP 257)
 **What it brings:** Hard grading requirement.
 **Subtasks:**
-- [ ] Add docstrings to every class and function (Google or NumPy style)
-- [ ] Document Args/Returns/Raises where relevant
+- [x] Add docstrings to every class and function (Google or NumPy style)
+- [x] Document Args/Returns/Raises where relevant
 
 ### Task 10.3 — Flake8 compliance
 **What it brings:** Hard grading requirement.
 **Subtasks:**
-- [ ] Run `flake8 .` and fix all reported issues
-- [ ] Add `.flake8` or `setup.cfg` if custom line-length rules needed
+- [x] Run `flake8 .` and fix all reported issues
+- [x] Add `.flake8` or `setup.cfg` if custom line-length rules needed
 
 ### Task 10.4 — Exception handling audit
 **What it brings:** Hard grading requirement ("if your program crashes... it will be considered non-functional").
 **Subtasks:**
-- [ ] Wrap every file I/O operation in try/except with context managers
-- [ ] Wrap maze generator calls (already done in Task 2.2)
-- [ ] Manually test: delete config, corrupt highscore file, bad CLI args, missing assets — confirm zero tracebacks
+- [x] Wrap every file I/O operation in try/except with context managers
+- [x] Wrap maze generator calls (already done in Task 2.2)
+- [x] Manually test: delete config, corrupt highscore file, bad CLI args, missing assets — confirm zero tracebacks
 
 ---
 
