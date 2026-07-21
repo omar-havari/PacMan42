@@ -81,6 +81,14 @@ class Ghost:
     def current_cell(self):
         return pixel_to_cell(self.x, self.y, self.cell, self.offset_x, self.offset_y)
 
+    # NEW (Task 8.4): pause support - the only absolute timestamp a ghost
+    # owns is its eaten/respawn deadline, so push that forward by the paused
+    # duration (when it's actually set) so an eaten ghost doesn't secretly
+    # respawn while the game is frozen.
+    def shift_time(self, delta):
+        if self.eaten_until:
+            self.eaten_until += delta
+
     # NEW (Task 5.4): called when the player touches this ghost while it's
     # FRIGHTENED. The ghost is sent straight back to its home corner and
     # hidden ("disappears" option from the task, simpler than an eyes-only
@@ -228,6 +236,11 @@ class GhostManager:
     def draw(self, screen):
         for ghost in self.ghosts:
             ghost.draw()
+
+    # NEW (Task 8.4): fan the pause time-shift out to every ghost.
+    def shift_time(self, delta):
+        for ghost in self.ghosts:
+            ghost.shift_time(delta)
 
     # NEW (Task 5.4): any FRIGHTENED ghost sharing the player's cell gets
     # eaten. Returns how many were eaten this frame so GameDemo can award
