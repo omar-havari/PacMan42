@@ -76,10 +76,10 @@ def can_go(grid: List[List[str]], row: int, col: int, direction: str) -> bool:
 
 
 # Global slowdown applied to BOTH Pac-Man and the ghosts (every state: chase,
-# frightened, boosted). 0.6 = 60% of whatever their current step-based speed
+# frightened, boosted). 0.5 = 50% of whatever their current step-based speed
 # already works out to. Kept here (not duplicated in Player.py/ghost.py) so
 # there is exactly one knob to retune the overall pace of the game.
-SPEED_SCALE = 0.6
+SPEED_SCALE = 0.5
 
 
 def duty_cycle_ready(accumulator: float, rate: float) -> Tuple[bool, float]:
