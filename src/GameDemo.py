@@ -7,7 +7,6 @@ main loop in :mod:`src.app` drives, plus pause support (Task 8.4) and the cheat
 toggles (Phase 9).
 """
 import os
-import random
 import sys
 from typing import List, Optional, Tuple
 
@@ -127,7 +126,7 @@ class GameDemo:
         if self.level == 1:
             seed = self.config.seed
         else:
-            seed = random.randrange(1_000_000)
+            seed = 0
 
         # Task 6.2: config's "level" array can override the maze size for a
         # given level (1-indexed). Any level without a valid entry falls back

@@ -1,5 +1,4 @@
 import pygame
-import sys
 
 # Initializing pygame
 pygame.init()
@@ -23,7 +22,7 @@ while running:
             running = False
 
     # 1. Clear the screen with a background color (so text doesn't smear)
-    screen.fill((0, 0, 0)) 
+    screen.fill((0, 0, 0))
 
     # 2. Draw the text inside the loop
     screen.blit(text, (s_width / 2 - 200, s_height / 2))
