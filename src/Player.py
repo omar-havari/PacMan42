@@ -246,26 +246,8 @@ class Player:
         if aligned:
             if self.wanted_direction and self._can_go(self.wanted_direction):
                 self.direction = self.wanted_direction
-
-            # "Aligned" = pixel position sits exactly on a cell boundary.
-            # This is the only moment a turn or a wall-stop can happen,
-            # which is what keeps pacman perfectly centred in corridors.
-            aligned = (
-                (self.x - self.offset_x) % self.cell == 0
-                and (self.y - self.offset_y) % self.cell == 0
-            )
-            if aligned:
-                if self.wanted_direction and self._can_go(self.wanted_direction):
-                    self.direction = self.wanted_direction
-                if self.direction and not self._can_go(self.direction):
-                    self.direction = None  # wall ahead: stop and wait
-
-            if not self.direction:
-                break  # nothing to do - stop sub-stepping early
-
-            dx, dy = _DIRECTIONS[self.direction]
-            self.x += dx
-            self.y += dy
+            if self.direction and not self._can_go(self.direction):
+                self.direction = None  # wall ahead: stop and wait
 
         if self.direction:
             dx, dy = _DIRECTIONS[self.direction]

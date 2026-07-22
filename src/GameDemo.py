@@ -96,9 +96,7 @@ class GameDemo:
 
         # Task 9.1: the three TOGGLE cheats' on/off state. Extra-life and
         # level-skip are one-shot actions, not toggles. Set BEFORE
-        # _start_level() runs because it r<<<<<<< HEAD
-	pip install -r requirements.txt
-	pip install mazegenerator-00001-py3-none-any.whle-applies the speed boost to each
+        # _start_level() runs because it re-applies the speed boost to each
         # freshly-built Player.
         self.cheat_invincible = False
         self.cheat_ghost_freeze = False
