@@ -2,6 +2,7 @@
 
 install:
 	pip install -r requirements.txt
+	pip install mazegenerator-00001-py3-none-any.whl
 
 run:
 	python pac-man.py config.json
