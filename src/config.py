@@ -53,7 +53,7 @@ class Config:
         )
         self.points_per_ghost: int = config_data.get("points_per_ghost", 200)
         self.seed: int = config_data.get("seed", 42)
-        self.level_max_time: int = config_data.get("level_max_time", 90)
+        self.level_max_time: int = config_data.get("level_max_time", 120)
 
         self._validate()
 
@@ -72,9 +72,9 @@ class Config:
         if self.level_max_time <= 0:
             print(
                 "Warning: 'level_max_time' must be greater than 0. "
-                "Using default value of 90."
+                "Using default value of 120."
             )
-            self.level_max_time = 90
+            self.level_max_time = 120
         if (
             self.points_per_pacgum < 0
             or self.points_per_super_pacgum < 0

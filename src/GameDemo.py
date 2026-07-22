@@ -291,15 +291,20 @@ class GameDemo:
         if pygame.time.get_ticks() < self.countdown_until:
             return False
 
-        # Task 6.1: time's up, frozen beat before the next attempt.
+        # Task 6.1: time's up, frozen beat before retrying the SAME level in
+        # place. Unlike a full rebuild, this keeps the maze and every already
+        # eaten pac-gum (consumed gums do NOT respawn) - only positions reset.
         if self.time_up_freeze_until is not None:
             if pygame.time.get_ticks() < self.time_up_freeze_until:
                 return False
             self.time_up_freeze_until = None
+<<<<<<< HEAD
             self.player.lives -= 1
             if self.player.lives <= 0:
                 self.player.game_over_time = pygame.time.get_ticks()
                 return False
+=======
+>>>>>>> e51ccf4242ba76e72d4ed7a1bfcdbeeff347f29d
             self._restart_level_in_place()
             return False
 
@@ -311,15 +316,23 @@ class GameDemo:
             self._restart_level_in_place()
             return False
 
-        # Task 6.1: per-level countdown timer. Running out of time never costs
-        # a life or ends the run - it just regenerates the SAME level. Checked
-        # BEFORE anyone moves this frame, so the freeze holds the exact frame
-        # the timer expired.
+        # Task 6.1 (CHANGED): per-level countdown timer. Running out of time
+        # before the level is cleared now costs ONE life and retries the SAME
+        # level in place - the maze and every already-eaten pac-gum are kept
+        # (consumed gums do NOT respawn). Draining the last life is game over.
+        # Checked BEFORE anyone moves this frame, so the freeze holds the exact
+        # frame the timer expired. The game_over_time guard stops the expired
+        # clock from re-triggering (and re-charging a life) every frame while
+        # the game-over screen is showing.
         time_left_ms = (
             self.config.level_max_time * 1000
             - (pygame.time.get_ticks() - self.level_start_time)
         )
-        if time_left_ms <= 0:
+        if time_left_ms <= 0 and not self.player.game_over_time:
+            self.player.lives -= 1
+            if self.player.lives <= 0:
+                self.player.game_over_time = pygame.time.get_ticks()
+                return False  # game-over screen just triggered
             self.time_up_freeze_until = pygame.time.get_ticks() + _TIME_UP_FREEZE_MS
             return False
 
