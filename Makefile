@@ -4,10 +4,10 @@ install:
 	pip install -r requirements.txt
 
 run:
-	python src/main_menu_UI.py
+	python pac-man.py config.json
 
 debug:
-	python -m pdb src/main_menu_UI.py
+	python -m pdb pac-man.py config.json
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
@@ -15,10 +15,10 @@ clean:
 	rm -rf .mypy_cache
 
 lint:
-	flake8 src/
+	flake8 src/ pac-man.py
 
 lint-strict:
-	flake8 src/ && mypy src/ \
+	flake8 src/ pac-man.py && mypy src/ pac-man.py \
 		--warn-return-any \
 		--warn-unused-ignores \
 		--ignore-missing-imports \

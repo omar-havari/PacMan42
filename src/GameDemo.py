@@ -1,8 +1,18 @@
+"""The in-game screen: the maze, player, pac-gums, ghosts, HUD and cheats.
+
+:class:`GameDemo` is the real gameplay screen. It owns the maze, the pac-gums,
+the score and level counters, the four ghosts, and coordinates all of them each
+frame. It exposes the small ``handle_event``/``update``/``draw`` contract the
+main loop in :mod:`src.app` drives, plus pause support (Task 8.4) and the cheat
+toggles (Phase 9).
+"""
 import os
 import sys
+from typing import List, Optional, Tuple
 
 import pygame
 
+from src.config import Config
 from src.Player import Player
 from src.maze_loader import MazeLoader
 from src.pacgums import PacgumManager
@@ -10,64 +20,92 @@ from src.ghost import GhostManager
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
-# Maze size in GENERATOR cells - the expanded WALL/CORRIDOR grid on screen
-# is (2*w+1) x (2*h+1), so 15x15 becomes a 31x31 grid. Later the config's
-# "level" array can override this per level.
+# Maze size in GENERATOR cells - the expanded WALL/CORRIDOR grid on screen is
+# (2*w+1) x (2*h+1), so 15x15 becomes a 31x31 grid.
 MAZE_WIDTH = 15
 MAZE_HEIGHT = 15
 MAX_LEVEL = 10  # subject: the game is won after completing 10 levels
 
-# NEW: brief "Ready" pause before each level's gameplay actually begins.
-# Without this, ghosts (which move every frame regardless of input) got a
-# free head start over a player who hasn't pressed a key yet.
+# Brief "Ready" pause before each level begins, so ghosts (which move every
+# frame regardless of input) don't get a head start over an idle player.
 _READY_COUNTDOWN_MS = 3000
 
-# NEW (Task 6.1): when the level timer runs out, the game freezes on that
-# exact frame for a beat before the next attempt's "Ready" countdown
-# appears - see the "time_up_freeze_until" handling in update().
+# Task 6.1: when the level timer runs out, freeze on that exact frame for a
+# beat before the next attempt's "Ready" countdown.
 _TIME_UP_FREEZE_MS = 1000
 
-# NEW (Task 5.5): same idea, but for a ghost catching Pac-Man - freeze on
-# the exact frame of contact, then a "Ready" countdown, then back into the
-# SAME level (grid + remaining pacgums untouched, only positions reset).
+# Task 5.5: same idea, but for a ghost catching Pac-Man - freeze on the exact
+# frame of contact, then a countdown, then back into the SAME level.
 _GHOST_DEATH_FREEZE_MS = 1000
 
-# NEW (Task 8.3): height in pixels of the HUD bar reserved at the top of the
-# screen. The maze layout is told to keep this strip clear (see the
-# get_layout/maze.draw calls), so the score/lives/level/time line drawn into
-# it can never overlap the maze below.
+# Task 8.3: height in pixels of the HUD bar reserved at the top of the screen.
+# The maze layout keeps this strip clear so the score/lives/level/time line
+# can never overlap the maze below.
 _HUD_HEIGHT = 60
 
+# Phase 9 / Task 9.1: the cheat keys. Kept in one place so the handling below
+# and the Instructions screen document the exact same keys. Chosen to never
+# collide with the arrow keys (movement) or P/ESC (pause).
+#   I - toggle invincibility   G - toggle ghost freeze   B - toggle speed boost
+#   L - grant one extra life    N - skip to the next level
+_CHEAT_INVINCIBLE = pygame.K_i
+_CHEAT_GHOST_FREEZE = pygame.K_g
+_CHEAT_SPEED_BOOST = pygame.K_b
+_CHEAT_EXTRA_LIFE = pygame.K_l
+_CHEAT_SKIP_LEVEL = pygame.K_n
 
-# CHANGED (Phase 4): GameDemo is no longer a thin wrapper around Player -
-# it is now the real game screen. It owns the maze, the pacgums, the score
-# and the level counter, and coordinates all of them each frame.
+# Magenta cheat readout, matching the "42" wall colour so the active-cheats
+# line reads as an obviously non-standard, debug overlay.
+_CHEAT_COLOR = (255, 0, 255)
+
+
 class GameDemo:
-    def __init__(self, screen, config):
+    """One playthrough: builds and coordinates every level, frame by frame."""
+
+    # Declared here (without a value) so type checkers know the attribute types;
+    # they are actually created inside _start_level(), which is why __init__
+    # uses hasattr(self, "player") to detect the very first level build.
+    player: Player
+    grid: List[List[str]]
+    pacgums: PacgumManager
+    ghosts: GhostManager
+
+    def __init__(self, screen: pygame.Surface, config: Config) -> None:
+        """Set up the game and build level 1.
+
+        Score and level live here (not on the player) because they must survive
+        across levels while the player/pac-gums/ghosts get rebuilt each level.
+        If maze generation fails, :attr:`failed` is set and ``update()`` returns
+        ``True`` on the first frame so the menu loop takes the screen back.
+        """
         self.screen = screen
-        self.config = config  # Used to assign values to all the parameters needed
+        self.config = config
         self.maze = MazeLoader()
 
-        # Score and level live HERE (not on the player) because they must
-        # survive across levels while player/pacgums get rebuilt each level.
         self.score = 0
         self.level = 1
-        self.victory_time = None
+        self.victory_time: Optional[int] = None
 
-        # Placeholder for Phase 5: eating a super-pacgum starts this timer;
-        # the ghosts will read it to know they are edible. Wiring it now
-        # means Task 4.2 is complete and Phase 5 just has to consume it.
+        # Eating a super-pac-gum sets this deadline; the ghosts read it to know
+        # they are edible.
         self.fright_until = 0
 
         self.hud_font = self._load_font(
             os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 24
         )
 
-        # If maze generation fails we don't crash - update() returns True
-        # on the first frame and the menu loop takes the screen back.
+        # Task 9.1: the three TOGGLE cheats' on/off state. Extra-life and
+        # level-skip are one-shot actions, not toggles. Set BEFORE
+        # _start_level() runs because it re-applies the speed boost to each
+        # freshly-built Player.
+        self.cheat_invincible = False
+        self.cheat_ghost_freeze = False
+        self.cheat_speed_boost = False
+
         self.failed = not self._start_level()
 
-    def _load_font(self, path, size):
+    def _load_font(self, path: str, size: int) -> pygame.font.Font:
+        """Load a font, exiting cleanly (no traceback) if the file is missing."""
         try:
             return pygame.font.Font(path, size)
         except FileNotFoundError:
@@ -75,40 +113,24 @@ class GameDemo:
             pygame.quit()
             sys.exit(1)
 
-    # NEW (Task 4.3): builds one level - maze, player, pacgums, ghosts. Called
-    # for level 1 from __init__ and again every time a level is cleared. This
-    # is SETUP (runs once per level) - per-frame movement/drawing lives in
-    # update()/draw(), not here. ALSO called again by update() itself when
-    # Task 6.1's countdown timer runs out, to regenerate the SAME level
-    # number - see the comment there for why.
-    def _start_level(self):
-        # Subject rule: level 1 uses the fixed seed from the config (so the
-        # first maze is reproducible), every later level gets a random seed.
-        # This still holds true even when level 1 is being regenerated after
-        # a timeout, so it stays reproducible on retries too.
-        #
-        # BUGFIX (Task 6.2): this used to pick the "random" seed ourselves
-        # via random.randrange(1_000_000). But MazeGenerator.generate() (see
-        # Maze_Code_Reference.md) does `random.seed(seed) if seed > 0 else
-        # random.seed()` - i.e. it reseeds Python's GLOBAL random module.
-        # Level 1 always calls it with the same config.seed, which leaves
-        # that global RNG in the exact same deterministic state every run -
-        # so randrange() right after it produced the SAME "random" number
-        # on every single run of the game, not actually random at all.
-        # Passing 0 instead makes MazeGenerator itself call random.seed()
-        # with no argument, which seeds from real OS entropy/time - genuine
-        # randomness, unaffected by level 1's fixed seed.
+    def _start_level(self) -> bool:
+        """Build one level (maze, player, pac-gums, ghosts). Return success.
+
+        Called for level 1 from ``__init__`` and again every time a level is
+        cleared or regenerated after a timeout. This is SETUP; per-frame logic
+        lives in :meth:`update`/:meth:`draw`.
+        """
+        # Level 1 uses the fixed config seed (reproducible first maze); every
+        # later level gets a random seed. Holds even when level 1 is
+        # regenerated after a timeout, so retries stay reproducible too.
         if self.level == 1:
             seed = self.config.seed
         else:
             seed = 0
 
-        # NEW (Task 6.2): config's "level" array can override the maze size
-        # for a given level (1-indexed -> config.level[level - 1]). Any
-        # level without a valid entry - including every level once the
-        # array runs out, which happens immediately if it's the default
-        # empty list - just falls back to the fixed MAZE_WIDTH/HEIGHT, i.e.
-        # procedural generation exactly as before.
+        # Task 6.2: config's "level" array can override the maze size for a
+        # given level (1-indexed). Any level without a valid entry falls back
+        # to the fixed MAZE_WIDTH/HEIGHT (procedural generation as before).
         width, height = MAZE_WIDTH, MAZE_HEIGHT
         idx = self.level - 1
         if 0 <= idx < len(self.config.level):
@@ -121,80 +143,89 @@ class GameDemo:
                 if isinstance(candidate_height, int) and candidate_height > 0:
                     height = candidate_height
 
-        self.grid = self.maze.generate(width, height, seed)
-        if self.grid is None:
+        grid = self.maze.generate(width, height, seed)
+        if grid is None:
             # MazeLoader already printed the real error (Task 2.2).
             print("Error: could not generate the maze, returning to menu.")
             return False
+        self.grid = grid
 
-        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid, _HUD_HEIGHT)
+        cell, offset_x, offset_y = self.maze.get_layout(
+            self.screen, self.grid, _HUD_HEIGHT
+        )
 
-        # Lives carry over between levels: the very first call (no player
-        # yet) pulls the starting count from the config, every later call -
-        # whether advancing to a new level or regenerating this one after a
-        # Task 6.1 timeout - carries over whatever the player currently has.
+        # Lives carry over between levels: the very first call pulls the
+        # starting count from the config, every later call carries over
+        # whatever the player currently has.
         if not hasattr(self, "player"):
             lives = self.config.lives
         else:
             lives = self.player.lives
 
-        self.player = Player(self.screen, lives, self.grid, cell, offset_x, offset_y)
+        self.player = Player(
+            self.screen, lives, self.grid, cell, offset_x, offset_y
+        )
+        # A fresh Player starts un-boosted, so re-apply the speed-boost cheat
+        # if it is currently toggled on (e.g. after a level-skip).
+        self.player.set_speed_boost(self.cheat_speed_boost)
         self.pacgums = PacgumManager(
             self.grid, self.player.current_cell(), cell, offset_x, offset_y
         )
-        # NEW (Task 5.1): 4 ghosts, one per maze corner. Rebuilt every level
-        # like the player and pacgums.
-        self.ghosts = GhostManager(self.screen, self.grid, cell, offset_x, offset_y)
+        self.ghosts = GhostManager(
+            self.screen, self.grid, cell, offset_x, offset_y
+        )
 
-        # NEW: "Ready" countdown (3, 2, 1) before gameplay begins - see
-        # update()/draw(). Both the player and the ghosts stay frozen until
-        # it ends, so ghosts never get a head start over an idle player.
-        # The Task 6.1 level timer starts counting from the exact moment
-        # THIS ends, not from level construction - so it truly starts
-        # "regardless" of player input rather than depending on it.
+        # "Ready" countdown before gameplay. Both player and ghosts stay frozen
+        # until it ends. The level timer starts counting from the exact moment
+        # this ends, not from construction.
         now = pygame.time.get_ticks()
         self.countdown_until = now + _READY_COUNTDOWN_MS
         self.level_start_time = self.countdown_until
-        # Cleared here so a fresh level never starts mid-freeze from a
-        # timeout or ghost death that happened on a previous attempt.
-        self.time_up_freeze_until = None
-        self.ghost_death_freeze_until = None
+        # Cleared so a fresh level never starts mid-freeze from a previous
+        # attempt's timeout or ghost death.
+        self.time_up_freeze_until: Optional[int] = None
+        self.ghost_death_freeze_until: Optional[int] = None
         return True
 
-    # NEW (Task 5.5/6.1): retrying the SAME level attempt - either a ghost
-    # caught Pac-Man, or the level timer ran out. Unlike _start_level(),
-    # this does NOT touch self.grid or self.pacgums - the maze and
-    # whichever pacgums are still uneaten stay exactly as they were. Only
-    # positions reset: Pac-Man back to the centre, ghosts back to their
-    # spawn corners in CHASE - then the normal "Ready" countdown runs
-    # again before movement resumes, same as any other level (re)start.
-    def _restart_level_in_place(self):
+    def _restart_level_in_place(self) -> None:
+        """Reset positions after a ghost death WITHOUT rebuilding the maze.
+
+        Unlike :meth:`_start_level`, this does not touch the grid or the
+        pac-gums - only Pac-Man and the ghosts reset, then the normal "Ready"
+        countdown runs again.
+        """
         self.player.respawn()
-        cell, offset_x, offset_y = self.maze.get_layout(self.screen, self.grid, _HUD_HEIGHT)
-        self.ghosts = GhostManager(self.screen, self.grid, cell, offset_x, offset_y)
+        cell, offset_x, offset_y = self.maze.get_layout(
+            self.screen, self.grid, _HUD_HEIGHT
+        )
+        self.ghosts = GhostManager(
+            self.screen, self.grid, cell, offset_x, offset_y
+        )
         self.fright_until = 0
 
         now = pygame.time.get_ticks()
         self.countdown_until = now + _READY_COUNTDOWN_MS
         self.level_start_time = self.countdown_until
 
-    # NEW (Task 8.4): can the player pause right now? Not during the game-over
-    # or victory takeover screens, and not on a failed level - only during
-    # real play (including the "Ready" countdown, which pauses fine).
-    def is_pausable(self):
+    def is_pausable(self) -> bool:
+        """Return ``True`` only during real play (not over a takeover screen).
+
+        Not during the game-over/victory screens, and not on a failed level -
+        pausing over a full-screen takeover would look broken.
+        """
         return (
             not self.failed
             and not self.victory_time
             and not self.player.game_over_time
         )
 
-    # NEW (Task 8.4): every deadline this screen tracks is an absolute
-    # get_ticks() timestamp. When the game is un-paused, app.py calls this
-    # with exactly how long the pause lasted, and we slide every timestamp
-    # forward by that amount - the ready countdown, the level timer, the
-    # fright window and both freeze timers - then fan the same shift out to
-    # the player and the ghosts. Net effect: the pause consumed zero game time.
-    def shift_time(self, delta):
+    def shift_time(self, delta: int) -> None:
+        """Slide every absolute deadline forward by ``delta`` ms (pause support).
+
+        Every timer here is an absolute ``get_ticks()`` timestamp. Sliding them
+        all forward by exactly the paused duration makes the pause consume zero
+        game time, then fans the shift out to the player and the ghosts.
+        """
         self.countdown_until += delta
         self.level_start_time += delta
         self.fright_until += delta
@@ -207,31 +238,60 @@ class GameDemo:
         self.player.shift_time(delta)
         self.ghosts.shift_time(delta)
 
-    def handle_event(self, event):
+    def handle_event(self, event: pygame.event.Event) -> None:
+        """Apply any cheat key, then forward the event to the player.
+
+        The cheat keys aren't arrow keys, so the player harmlessly ignores
+        them; arrow keys never match a cheat.
+        """
+        if event.type == pygame.KEYDOWN:
+            self._apply_cheat(event.key)
         self.player.handle_event(event)
 
-    def update(self):
+    def _apply_cheat(self, key: int) -> None:
+        """Map a pressed key to its cheat (toggle, one-shot, or ignore)."""
+        if key == _CHEAT_INVINCIBLE:
+            self.cheat_invincible = not self.cheat_invincible
+        elif key == _CHEAT_GHOST_FREEZE:
+            self.cheat_ghost_freeze = not self.cheat_ghost_freeze
+        elif key == _CHEAT_SPEED_BOOST:
+            self.cheat_speed_boost = not self.cheat_speed_boost
+            self.player.set_speed_boost(self.cheat_speed_boost)
+        elif key == _CHEAT_EXTRA_LIFE:
+            self.player.lives += 1
+        elif key == _CHEAT_SKIP_LEVEL:
+            self._cheat_skip_level()
+
+    def _cheat_skip_level(self) -> None:
+        """Jump to the next level (or win, if already on the last one).
+
+        Mirrors the "all pac-gums eaten" win branch in :meth:`update` so a
+        skipped level behaves exactly like a genuinely cleared one.
+        """
+        if not self.is_pausable():
+            return
+        if self.level >= MAX_LEVEL:
+            self.victory_time = pygame.time.get_ticks()
+        else:
+            self.level += 1
+            if not self._start_level():
+                self.failed = True
+
+    def update(self) -> bool:
+        """Advance the game one frame; return ``True`` when it should end."""
         # Maze generation failed in __init__ -> leave immediately, cleanly.
         if self.failed:
             return True
 
-        # --- has the 4-second victory screen finished showing? ---
+        # Has the 4-second victory screen finished showing?
         if self.victory_time:
             return pygame.time.get_ticks() - self.victory_time >= 4000
 
-        # --- "Ready" countdown: nothing moves, nothing ticks, until it ends ---
+        # "Ready" countdown: nothing moves or ticks until it ends.
         if pygame.time.get_ticks() < self.countdown_until:
             return False
 
-        # --- Task 6.1: time's up, frozen beat before the next attempt ---
-        # The moment the timer hit zero, everything froze exactly where it
-        # was (see below) instead of instantly regenerating - this holds
-        # that freeze for _TIME_UP_FREEZE_MS before applying the life loss
-        # and restarting the same level's "Ready" countdown. Uses
-        # _restart_level_in_place (same as ghost death, Task 5.5) rather
-        # than a full _start_level() - a timeout is still the SAME level
-        # attempt, so the maze and any pacgums already eaten must stay
-        # exactly as they were, not reset.
+        # Task 6.1: time's up, frozen beat before the next attempt.
         if self.time_up_freeze_until is not None:
             if pygame.time.get_ticks() < self.time_up_freeze_until:
                 return False
@@ -243,10 +303,7 @@ class GameDemo:
             self._restart_level_in_place()
             return False
 
-        # --- Task 5.5: ghost caught Pac-Man, frozen beat before retrying ---
-        # Mirrors the timeout freeze above, but restarts IN PLACE
-        # (_restart_level_in_place) instead of a full _start_level(), so
-        # the maze and any pacgums already eaten stay exactly as they were.
+        # Task 5.5: ghost caught Pac-Man, frozen beat before retrying in place.
         if self.ghost_death_freeze_until is not None:
             if pygame.time.get_ticks() < self.ghost_death_freeze_until:
                 return False
@@ -254,16 +311,10 @@ class GameDemo:
             self._restart_level_in_place()
             return False
 
-        # --- Task 6.1: per-level countdown timer ---
-        # DECISION (documented here per the subtask): running out of time
-        # costs a life and regenerates the SAME level with a fresh
-        # maze/pacgums/ghosts/timer - it does NOT end the run outright.
-        # This mirrors ghost contact exactly, so "you failed this level in
-        # time" and "a ghost caught you" both just cost one of the same
-        # pool of lives, and only running out of lives ends the game.
-        # Checked BEFORE the player/ghosts move this frame, so the freeze
-        # above genuinely holds the exact frame the timer expired - nobody
-        # gets one extra step in before it kicks in.
+        # Task 6.1: per-level countdown timer. Running out of time never costs
+        # a life or ends the run - it just regenerates the SAME level. Checked
+        # BEFORE anyone moves this frame, so the freeze holds the exact frame
+        # the timer expired.
         time_left_ms = (
             self.config.level_max_time * 1000
             - (pygame.time.get_ticks() - self.level_start_time)
@@ -272,62 +323,63 @@ class GameDemo:
             self.time_up_freeze_until = pygame.time.get_ticks() + _TIME_UP_FREEZE_MS
             return False
 
-        # Player moves first; if the game-over screen is up this returns
-        # True once it has been shown long enough.
+        # Player moves first; if the game-over screen is up this returns True
+        # once it has been shown long enough.
         if self.player.update():
             return True
         if self.player.game_over_time:
             return False  # game-over screen still showing, skip the rest
 
-        # Ghost update - chase Pac-Man (Task 5.2), or flee while a
-        # super-pacgum's effect is still active (Task 5.3).
+        # Ghost update - chase, or flee while a super-pac-gum is active. The
+        # ghost-freeze cheat skips their movement (they stay put but are still
+        # drawn and still dangerous on contact).
         fright_remaining = self.fright_until - pygame.time.get_ticks()
-        self.ghosts.update(self.player.current_cell(), fright_remaining)
+        if not self.cheat_ghost_freeze:
+            self.ghosts.update(self.player.current_cell(), fright_remaining)
 
-        # --- Task 5.4: eating a frightened ghost ---
+        # Task 5.4: eating a frightened ghost.
         eaten_ghosts = self.ghosts.resolve_player_contact(self.player.current_cell())
         self.score += eaten_ghosts * self.config.points_per_ghost
 
-        # --- Task 5.5: real ghost contact - only CHASE-state ghosts are
-        # dangerous, and the respawn invincibility window (Task 3.3) stops
-        # a single hit from chaining into another death right as the
-        # freeze below ends. Losing a life still ends the game at 0, same
-        # as ever - it just no longer respawns instantly: it freezes on
-        # this exact contact frame first (ghost_death_freeze_until,
-        # handled above), then reruns the "Ready" countdown before
-        # resuming, with the maze/remaining pacgums untouched.
-        if not self.player.is_invincible() and self.ghosts.resolve_chase_contact(self.player.current_cell()):
+        # Task 5.5: real ghost contact - only CHASE-state ghosts are dangerous,
+        # and the respawn invincibility window stops a hit chaining into
+        # another death. The invincibility cheat also blocks the life loss.
+        if (
+            not self.cheat_invincible
+            and not self.player.is_invincible()
+            and self.ghosts.resolve_chase_contact(self.player.current_cell())
+        ):
             self.player.lives -= 1
             if self.player.lives <= 0:
                 self.player.game_over_time = pygame.time.get_ticks()
-                return False  # game-over screen just triggered, skip the rest
-            self.ghost_death_freeze_until = pygame.time.get_ticks() + _GHOST_DEATH_FREEZE_MS
+                return False  # game-over screen just triggered
+            self.ghost_death_freeze_until = (
+                pygame.time.get_ticks() + _GHOST_DEATH_FREEZE_MS
+            )
             return False
 
-        # --- Task 4.2: collection and scoring ---
-        # Whatever cell pacman's centre is in, try to eat what's there.
-        # Points only ever get ADDED, so the score can never decrease.
+        # Task 4.2: collection and scoring. Points only ever get ADDED.
         eaten = self.pacgums.collect(self.player.current_cell())
         if eaten == "PACGUM":
             self.score += self.config.points_per_pacgum
         elif eaten == "SUPER":
             self.score += self.config.points_per_super_pacgum
-            # Ghosts become edible for 7 seconds (consumed in Phase 5).
+            # Ghosts become edible for 7 seconds.
             self.fright_until = pygame.time.get_ticks() + 7000
 
-        # --- Task 4.3: level win condition ---
+        # Task 4.3: level win condition.
         if self.pacgums.remaining() == 0:
             if self.level >= MAX_LEVEL:
                 self.victory_time = pygame.time.get_ticks()
             else:
                 self.level += 1
-                # New maze, new pacgums - score and lives carry over.
                 if not self._start_level():
                     return True
 
         return False
 
-    def draw(self):
+    def draw(self) -> None:
+        """Render the current frame (maze/sprites/HUD, or a takeover screen)."""
         if self.failed:
             return
 
@@ -339,33 +391,30 @@ class GameDemo:
             self.player.draw()  # Player draws the Game Over screen itself
             return
 
-        # NEW: "Ready" freeze - a plain black screen with a white countdown
-        # number, same full-screen-takeover style as the Game Over/Victory
-        # screens, instead of showing the maze underneath. The new level is
-        # fully built already (see _start_level()) but stays hidden until
-        # this ends.
+        # "Ready" freeze: a plain black screen with a white countdown number.
+        # The new level is fully built already but stays hidden until this ends.
         remaining_ms = self.countdown_until - pygame.time.get_ticks()
         if remaining_ms > 0:
             remaining_s = remaining_ms // 1000 + 1
             self._draw_center_text(str(remaining_s), color=(255, 255, 255))
             return
 
-        # Draw order = layers: maze fills the background (kept clear of the
-        # top HUD strip via _HUD_HEIGHT), pacgums sit in the corridors, ghosts
-        # on top of those, pacman above the ghosts (so he stays visible on
-        # overlap), HUD text above everything.
+        # Draw order = layers: maze (kept clear of the top HUD strip), pac-gums,
+        # ghosts, then Pac-Man on top, then the HUD and cheat overlay.
         self.maze.draw(self.screen, self.grid, _HUD_HEIGHT)
         self.pacgums.draw(self.screen)
         self.ghosts.draw(self.screen)
         self.player.draw()
 
         self._draw_hud()
+        self._draw_cheats()
 
-    # NEW (Task 8.3): the HUD - score, level, lives and remaining time - laid
-    # out across the reserved top strip. Because get_layout()/maze.draw() were
-    # given _HUD_HEIGHT as a top margin, the maze starts BELOW this strip, so
-    # nothing here can ever overlap the maze.
-    def _draw_hud(self):
+    def _draw_hud(self) -> None:
+        """Draw score, level, lives and remaining time across the top strip.
+
+        Because the layout reserves ``_HUD_HEIGHT`` at the top, the maze starts
+        below this strip, so nothing here can ever overlap the maze.
+        """
         time_left = max(
             0,
             self.config.level_max_time
@@ -378,9 +427,8 @@ class GameDemo:
             f"TIME {time_left}",
         ]
         screen_width = self.screen.get_width()
-        # Give each item an equal horizontal slice of the bar and centre it
-        # within that slice, so the four readouts stay evenly spread at any
-        # screen width.
+        # Give each item an equal horizontal slice and centre it within, so the
+        # four readouts stay evenly spread at any screen width.
         slice_width = screen_width / len(items)
         for index, text in enumerate(items):
             surface = self.hud_font.render(text, False, (255, 255, 0))
@@ -388,10 +436,30 @@ class GameDemo:
             y = (_HUD_HEIGHT - surface.get_height()) / 2
             self.screen.blit(surface, (x, y))
 
-    # NEW: victory screen, same style as the Game Over screen. Sized at 120
-    # (not 300) so the longer text still fits on smaller screens. Also
-    # reused for the white "Ready" countdown via the color param.
-    def _draw_center_text(self, text, color=(255, 255, 0)):
+    def _draw_cheats(self) -> None:
+        """Draw a magenta line listing active cheats (nothing if none are on)."""
+        active: List[str] = []
+        if self.cheat_invincible:
+            active.append("INVINCIBLE")
+        if self.cheat_ghost_freeze:
+            active.append("GHOST-FREEZE")
+        if self.cheat_speed_boost:
+            active.append("SPEED")
+        if not active:
+            return
+        text = "CHEATS: " + "  ".join(active)
+        surface = self.hud_font.render(text, False, _CHEAT_COLOR)
+        y = self.screen.get_height() - surface.get_height() - 10
+        self.screen.blit(surface, (10, y))
+
+    def _draw_center_text(
+        self, text: str, color: Tuple[int, int, int] = (255, 255, 0)
+    ) -> None:
+        """Draw a single large centred line on a black screen.
+
+        Used for the Victory screen and, via ``color``, the white "Ready"
+        countdown. Sized at 120 so longer text still fits on smaller screens.
+        """
         font = self._load_font(
             os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 120
         )
