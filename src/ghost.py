@@ -12,7 +12,9 @@ import pygame
 from src.movement import (
     _DIRECTIONS,
     _OPPOSITE,
+    SPEED_SCALE,
     can_go,
+    duty_cycle_ready,
     is_aligned,
     pick_speed,
     pixel_to_cell,
@@ -81,6 +83,10 @@ class Ghost:
         # can't just be halved; instead the ghost only steps forward on some
         # frames (see _FRIGHTENED_STEP_EVERY) - same step size, less often.
         self._frighten_tick = 0
+
+        # NEW (global 60% slowdown): scales overall speed by SPEED_SCALE
+        # without touching step SIZE - see duty_cycle_ready() in movement.py.
+        self._move_accum = 0.0
 
         row, col = spawn_cell
         self.x = offset_x + col * cell
@@ -173,8 +179,12 @@ class Ghost:
         # CHANGED (speed tuning): take several WHOLE base-speed steps per frame.
         # Each _step() re-checks alignment and re-picks a direction, so the
         # cell-snapping and wall logic stay correct at any speed.
-        for _ in range(_GHOST_STEPS_PER_FRAME):
-            self._step(target_cell, frightened)
+        should_move, self._move_accum = duty_cycle_ready(
+            self._move_accum, SPEED_SCALE
+        )
+        if should_move:
+            for _ in range(_GHOST_STEPS_PER_FRAME):
+                self._step(target_cell, frightened)
 
         self.state = "FRIGHTENED" if frightened else "CHASE"
         self.flashing = flashing

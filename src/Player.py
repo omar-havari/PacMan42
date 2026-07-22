@@ -10,7 +10,7 @@ from typing import List, Optional, Tuple
 
 import pygame
 
-from src.movement import _DIRECTIONS, _OPPOSITE
+from src.movement import _DIRECTIONS, _OPPOSITE, SPEED_SCALE, duty_cycle_ready
 
 _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 
@@ -78,6 +78,11 @@ class Player:
         # the alignment invariant intact: the base speed is guaranteed to divide
         # the cell size, so every sub-step still lands exactly on the grid.
         self.steps_per_frame = _BASE_STEPS_PER_FRAME
+
+        # NEW (global 60% slowdown): scales overall speed by SPEED_SCALE
+        # without touching step SIZE (which must keep dividing the cell) -
+        # see duty_cycle_ready() in movement.py.
+        self._move_accum = 0.0
 
         # --- animation set-up: open, half-open, closed mouth frames ---
         figure_paths = [
@@ -220,8 +225,13 @@ class Player:
         # While the game-over screen is up, nothing else should move.
         if self.game_over_time:
             return pygame.time.get_ticks() - self.game_over_time >= 4000
-        for _ in range(self.steps_per_frame):
-            self._step()
+
+        should_move, self._move_accum = duty_cycle_ready(
+            self._move_accum, SPEED_SCALE
+        )
+        if should_move:
+            for _ in range(self.steps_per_frame):
+                self._step()
 
         # The maze border is a solid ring of WALL cells, so leaving the screen
         # is impossible; lives are lost to ghosts (Phase 5), not to bounds.

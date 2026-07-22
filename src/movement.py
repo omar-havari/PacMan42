@@ -75,6 +75,37 @@ def can_go(grid: List[List[str]], row: int, col: int, direction: str) -> bool:
     )
 
 
+# Global slowdown applied to BOTH Pac-Man and the ghosts (every state: chase,
+# frightened, boosted). 0.6 = 60% of whatever their current step-based speed
+# already works out to. Kept here (not duplicated in Player.py/ghost.py) so
+# there is exactly one knob to retune the overall pace of the game.
+SPEED_SCALE = 0.6
+
+
+def duty_cycle_ready(accumulator: float, rate: float) -> Tuple[bool, float]:
+    """Advance a fractional "should I act this frame?" accumulator.
+
+    Whole-step movement can't be scaled by a fractional rate directly (e.g. 2
+    steps * 0.6 isn't a whole number), so instead of changing step SIZE, this
+    changes step FREQUENCY: every frame adds ``rate`` to the accumulator, and
+    whenever it reaches 1.0 the caller should act, and 1.0 is subtracted back
+    out. Over many frames this fires on exactly ``rate`` of them, evenly
+    spaced (like a Bresenham line) rather than in bursts.
+
+    Args:
+        accumulator: The accumulator's value from last frame (start at 0.0).
+        rate: Fraction of frames that should act, in ``(0, 1]``.
+
+    Returns:
+        ``(should_act, new_accumulator)`` - store the second value back onto
+        the caller's own accumulator for next frame.
+    """
+    accumulator += rate
+    if accumulator >= 1.0:
+        return True, accumulator - 1.0
+    return False, accumulator
+
+
 def pick_speed(cell: int) -> int:
     """Return the largest step size (<= ``cell // 6``) that divides ``cell``.
 
