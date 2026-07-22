@@ -19,6 +19,14 @@ _ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets
 # could chain into an instant second death.
 _INVINCIBILITY_MS = 1000
 
+# CHANGED (speed tuning): how many WHOLE base-speed steps Pac-Man takes per
+# frame. Speed is raised by taking more whole steps (not a bigger single step)
+# so the cell-alignment invariant is never broken - see steps_per_frame below.
+#   _BASE_STEPS_PER_FRAME  - normal play (was an implicit 1; doubled to 2).
+#   _BOOST_STEPS_PER_FRAME - the `B` speed-boost cheat (kept at 2x the base).
+_BASE_STEPS_PER_FRAME = 2
+_BOOST_STEPS_PER_FRAME = 4
+
 
 class Player:
     """The player sprite: movement, animation, lives and the game-over screen."""
@@ -60,12 +68,13 @@ class Player:
                 self.speed = candidate
                 break
 
-        # NEW (Task 9.1 - speed-boost cheat): how many base-speed steps to take
-        # per frame. 1 = normal, 2 = the speed-boost cheat. Boosting by taking
+        # NEW (Task 9.1 - speed-boost cheat), CHANGED (speed tuning): how many
+        # base-speed steps to take per frame. _BASE_STEPS_PER_FRAME = normal,
+        # _BOOST_STEPS_PER_FRAME = the speed-boost cheat. Boosting by taking
         # extra WHOLE base-speed steps (instead of a bigger single step) keeps
         # the alignment invariant intact: the base speed is guaranteed to divide
         # the cell size, so every sub-step still lands exactly on the grid.
-        self.steps_per_frame = 1
+        self.steps_per_frame = _BASE_STEPS_PER_FRAME
 
         # --- animation set-up: open, half-open, closed mouth frames ---
         figure_paths = [
@@ -132,12 +141,14 @@ class Player:
         return pygame.time.get_ticks() < self.invincible_until
 
     def set_speed_boost(self, on: bool) -> None:
-        """Turn the speed-boost cheat on or off (2 base-speed steps per frame).
+        """Turn the speed-boost cheat on or off (extra base-speed steps/frame).
 
-        Boosting via extra whole steps (rather than a bigger single step) means
-        alignment is never broken - see ``steps_per_frame`` in ``__init__``.
+        On boosts to ``_BOOST_STEPS_PER_FRAME``; off restores the normal
+        ``_BASE_STEPS_PER_FRAME``. Boosting via extra whole steps (rather than a
+        bigger single step) means alignment is never broken - see
+        ``steps_per_frame`` in ``__init__``.
         """
-        self.steps_per_frame = 2 if on else 1
+        self.steps_per_frame = _BOOST_STEPS_PER_FRAME if on else _BASE_STEPS_PER_FRAME
 
     def shift_time(self, delta: int) -> None:
         """Slide every absolute timer forward by ``delta`` ms (pause support).
