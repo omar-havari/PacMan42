@@ -1,27 +1,43 @@
-.PHONY: install run debug clean lint lint-strict
+# All targets are actions, not files, so list them as phony (always run them).
+.PHONY: install run debug clean fclean lint lint-strict
 
+# The venv's python. Every rule uses "$(PY) -m <tool>" so it always runs the
+# python AND the tools (pip, flake8, mypy) that live INSIDE the venv.
+# NOTE: this path is for Linux/Mac (where 42 reviews run). On Windows the venv
+# uses venv/Scripts/python instead — test on Linux or WSL.
+PY = venv/bin/python
+
+# Create the venv (if missing), then install every dependency INTO it.
 install:
-	pip install -r requirements.txt
-	pip install mazegenerator-00001-py3-none-any.whl
 
+      python3 -m venv venv
+      $(PY) -m pip install --upgrade pip
+      $(PY) -m pip install -r requirements.txt
+
+# Launch the game, using the venv's python.
 run:
-	python pac-man.py config.json
+      $(PY) pac-man.py config.json
 
+# Launch inside Python's built-in debugger (pdb) for step-by-step debugging.
 debug:
-	python -m pdb pac-man.py config.json
+      $(PY) -m pdb pac-man.py config.json
 
-clean:
-	find . -type d -name __pycache__ -exec rm -rf {} +
-	find . -name "*.pyc" -delete
-	rm -rf .mypy_cache
-
+# Mandatory lint: style (flake8) AND types (mypy) with the exact required flags.
 lint:
-	flake8 src/ pac-man.py
+      $(PY) -m flake8 .
+      $(PY) -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
+# Optional stricter type check: flake8 plus mypy in full --strict mode.
 lint-strict:
-	flake8 src/ pac-man.py && mypy src/ pac-man.py \
-		--warn-return-any \
-		--warn-unused-ignores \
-		--ignore-missing-imports \
-		--disallow-untyped-defs \
-		--check-untyped-defs
+      $(PY) -m flake8 .
+      $(PY) -m mypy . --strict
+
+# Remove Python caches/artifacts, but KEEP the venv (rebuilding it is slow).
+clean:
+      find . -type d -name __pycache__ -exec rm -rf {} +
+      rm -rf .mypy_cache
+      find . -name "*.pyc" -delete
+
+# Full clean: everything clean does, PLUS delete the venv for a fresh start.
+fclean: clean
+      rm -rf venv
