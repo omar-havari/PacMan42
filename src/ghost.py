@@ -40,6 +40,15 @@ _EATEN_DURATION_MS = 6000
 # chase harder.
 _FRIGHTENED_STEP_EVERY = 2
 
+# CHANGED (speed tuning): how many WHOLE base-speed steps a ghost takes per
+# frame while chasing. Ghost speed is raised the same alignment-safe way as
+# Pac-Man's - more whole steps per frame, never a bigger single step - so the
+# base step still divides the cell exactly. Doubling this to 2 matches Pac-Man's
+# doubled base speed, keeping the chase balance identical while everything moves
+# faster. Frightened ghosts still move on only every _FRIGHTENED_STEP_EVERY-th
+# step, so they stay proportionally slower (and catchable).
+_GHOST_STEPS_PER_FRAME = 2
+
 Cell = Tuple[int, int]
 Color = Tuple[int, int, int]
 
@@ -161,6 +170,22 @@ class Ghost:
             # that window is still active it goes back to FRIGHTENED next frame.
             frightened = False
 
+        # CHANGED (speed tuning): take several WHOLE base-speed steps per frame.
+        # Each _step() re-checks alignment and re-picks a direction, so the
+        # cell-snapping and wall logic stay correct at any speed.
+        for _ in range(_GHOST_STEPS_PER_FRAME):
+            self._step(target_cell, frightened)
+
+        self.state = "FRIGHTENED" if frightened else "CHASE"
+        self.flashing = flashing
+
+    def _step(self, target_cell: Cell, frightened: bool) -> None:
+        """Advance the ghost one base-speed step toward/away from ``target_cell``.
+
+        One movement sub-step: re-pick a direction when aligned on a cell, then
+        move a single base-speed hop (or hold still this step when frightened
+        and it isn't this ghost's turn to move).
+        """
         if is_aligned(self.x, self.y, self.cell, self.offset_x, self.offset_y):
             row, col = self.current_cell()
             options = [d for d in _DIRECTIONS if can_go(self.grid, row, col, d)]
@@ -195,9 +220,6 @@ class Ghost:
                 dx, dy = _DIRECTIONS[self.direction]
                 self.x += dx * self.speed
                 self.y += dy * self.speed
-
-        self.state = "FRIGHTENED" if frightened else "CHASE"
-        self.flashing = flashing
 
     def draw(self) -> None:
         """Draw the ghost in its current state (hidden while EATEN)."""
