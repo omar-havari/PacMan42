@@ -27,6 +27,10 @@ _INVINCIBILITY_MS = 1000
 _BASE_STEPS_PER_FRAME = 2
 _BOOST_STEPS_PER_FRAME = 4
 
+# The "Game Over" screen text colour - the project's theme blue (matches
+# _TEXT_COLOR in screens.py), replacing the old yellow.
+_GAME_OVER_COLOR = (90, 140, 255)
+
 
 class Player:
     """The player sprite: movement, animation, lives and the game-over screen."""
@@ -274,10 +278,23 @@ class Player:
         screen_width, screen_height = self.screen.get_size()
 
         if self.game_over_time:
-            game_over_font = self.load_path(
-                os.path.join(_ASSETS, 'fonts', 'PressStart2P-Regular.ttf'), 300
+            text = "Game Over"
+            font_path = os.path.join(
+                _ASSETS, 'fonts', 'PressStart2P-Regular.ttf'
             )
-            game_over = game_over_font.render("Game Over", False, (255, 255, 0))
+            # Size the text to the screen: render once at a reference size,
+            # then scale that size so the text fills ~85% of the width without
+            # exceeding half the height. A fixed 300px font overflowed the
+            # window; this fits every resolution.
+            ref_size = 100
+            ref_w, ref_h = self.load_path(font_path, ref_size).size(text)
+            scale = min(
+                screen_width * 0.85 / ref_w,
+                screen_height * 0.5 / ref_h,
+            )
+            size = max(8, int(ref_size * scale))
+            game_over_font = self.load_path(font_path, size)
+            game_over = game_over_font.render(text, False, _GAME_OVER_COLOR)
             game_over_box = game_over.get_rect(
                 center=(screen_width / 2, screen_height / 2)
             )
