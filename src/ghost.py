@@ -100,6 +100,12 @@ class Ghost:
         self.eaten_until = 0    # 0 = not eaten; else a get_ticks() timestamp
         self.flashing = False
 
+        # NEW (respawn immunity): once eaten, a ghost respawns in its normal
+        # colour and stays that way - even if the power pellet that let it get
+        # eaten is still running - until that flee window fully ends. Matches
+        # classic Pac-Man, where eaten ghosts don't go straight back to blue.
+        self._immune_to_fright = False
+
         ghost_file = 'Screenshot_From_2026-07-10_12-31-49-removebg-preview.png'
         ghost_image_path = os.path.join(_ASSETS, 'images', ghost_file)
         self.sprite: Optional[pygame.Surface]
@@ -172,8 +178,15 @@ class Ghost:
                 return
             self.eaten_until = 0
             # Force this respawn frame into CHASE even if the flee window that
-            # got it eaten is still running (matching "respawns in CHASE"). If
-            # that window is still active it goes back to FRIGHTENED next frame.
+            # got it eaten is still running. _immune_to_fright then keeps it
+            # in CHASE on later frames too, until that flee window fully ends.
+            self._immune_to_fright = True
+            frightened = False
+        elif not frightened:
+            # The flee window is over (or never started) - safe to be
+            # frightened again next time a power pellet is eaten.
+            self._immune_to_fright = False
+        elif self._immune_to_fright:
             frightened = False
 
         # CHANGED (speed tuning): take several WHOLE base-speed steps per frame.
