@@ -18,7 +18,8 @@ from src.maze_loader import MazeLoader
 from src.pacgums import PacgumManager
 from src.ghost import GhostManager
 
-_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
+from src.resources import asset_dir
+_ASSETS = asset_dir()
 
 # Maze size in GENERATOR cells - the expanded WALL/CORRIDOR grid on screen is
 # (2*w+1) x (2*h+1), so 15x15 becomes a 31x31 grid.
