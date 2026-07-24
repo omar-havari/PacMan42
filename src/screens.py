@@ -163,7 +163,7 @@ class MainMenu:
     def _draw_preview(self, screen: pygame.Surface) -> None:
         """Draw the "TOP SCORES" preview down the right-hand side."""
         screen_width = screen.get_size()[0]
-        x = screen_width - 360
+        x = screen_width - 520
         heading = self.font_preview.render("TOP SCORES", False, _HOVER_COLOR)
         screen.blit(heading, (x, 80))
         if not self.top_scores:
