@@ -1,0 +1,21 @@
+PAC-MAN — Controls & Options
+============================
+
+MOVE          Arrow keys (or WASD)
+PAUSE         P or ESC
+CONFIRM/MENU  Mouse click, or ENTER on the name-entry screen
+
+GOAL
+  Eat every pac-gum to clear a level. Eat a super-pac-gum (corners) to
+  turn the ghosts blue and edible for a few seconds. Clear 10 levels to win.
+
+CHEAT KEYS (for reviewers)
+  I  toggle invincibility        G  toggle ghost freeze
+  B  toggle speed boost          L  grant one extra life
+  N  skip to the next level
+
+CONFIGURATION
+  The game reads config.json (shipped next to the executable). Editable keys:
+  lives, points_per_pacgum, points_per_super_pacgum, points_per_ghost,
+  seed, level_max_time, width, height, highscore_file.
+  Lines starting with # are treated as comments.

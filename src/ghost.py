@@ -20,7 +20,8 @@ from src.movement import (
     pixel_to_cell,
 )
 
-_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
+from src.resources import asset_dir
+_ASSETS = asset_dir()
 
 # NEW (Task 5.3): how long before flee ends the sprite starts flashing, and
 # how fast it flashes. Lives here (not on GameDemo) since it's a ghost

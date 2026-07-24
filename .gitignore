@@ -9,5 +9,7 @@ venvs/
 dist/
 build/
 *.spec
+# The PyInstaller packaging spec is a required deliverable and must stay tracked.
+!pacman.spec
 highscores.json
-src/ "graphify-out/"
+graphify-out/

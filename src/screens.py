@@ -14,7 +14,8 @@ from src.config import Config
 from src.highscore import HighscoreManager
 from src.pacman_images import ImageElement
 
-_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
+from src.resources import asset_dir
+_ASSETS = asset_dir()
 
 # Shared blue theme (matches the maze walls at (33, 33, 255)), reused by every
 # menu-style screen so they all look like one game.

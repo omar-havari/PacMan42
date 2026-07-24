@@ -8,7 +8,8 @@ from typing import Dict, List, Optional, Tuple
 
 import pygame
 
-_ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
+from src.resources import asset_dir
+_ASSETS = asset_dir()
 
 Cell = Tuple[int, int]
 
