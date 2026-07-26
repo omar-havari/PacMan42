@@ -21,6 +21,12 @@ on:
 jobs:
   build-and-publish:
     runs-on: windows-latest
+    env:
+      # `secrets` can't be referenced directly in a step's `if:` (GitHub
+      # blocks that for security reasons) - computing the boolean here, at
+      # job level, and checking `env.HAS_BUTLER_KEY` in the step's `if:`
+      # instead is the supported workaround.
+      HAS_BUTLER_KEY: ${{ secrets.BUTLER_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,7 +53,7 @@ jobs:
       # notes) - safe to leave in even before that secret exists, since the
       # `if` guard skips it rather than failing the whole workflow.
       - name: Publish to itch.io
-        if: ${{ secrets.BUTLER_API_KEY != '' }}
+        if: ${{ env.HAS_BUTLER_KEY == 'true' }}
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         shell: bash
