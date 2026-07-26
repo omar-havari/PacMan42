@@ -1,0 +1,57 @@
+name: Build and publish Windows package
+
+# Runs on GitHub's own Windows cloud runner, so a Windows build can be
+# produced (and pushed to Itch.io) without needing a local Windows machine.
+# PyInstaller never cross-compiles - it must run ON the target OS - so this
+# job specifically uses `runs-on: windows-latest`.
+on:
+  workflow_dispatch: {}   # manual "Run workflow" button in the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "pac-man.py"
+      - "pacman.spec"
+      - "requirements.txt"
+      - "assets/**"
+      - "config.json"
+      - "CONTROLS.txt"
+      - ".github/workflows/build-windows.yml"
+
+jobs:
+  build-and-publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build the Windows package
+        run: pyinstaller pacman.spec
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacman-windows
+          path: dist/pacman
+
+      # Only runs if the BUTLER_API_KEY secret is configured (see README/CI
+      # notes) - safe to leave in even before that secret exists, since the
+      # `if` guard skips it rather than failing the whole workflow.
+      - name: Publish to itch.io
+        if: ${{ secrets.BUTLER_API_KEY != '' }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        shell: bash
+        run: |
+          curl -L -o butler.zip https://broth.itch.zone/butler/windows-amd64/LATEST/archive/default
+          unzip -o butler.zip -d butler_bin
+          ./butler_bin/butler push dist/pacman ${{ vars.ITCH_TARGET }}:windows
