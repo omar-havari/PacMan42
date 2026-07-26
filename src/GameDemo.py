@@ -345,7 +345,7 @@ class GameDemo:
             self.ghosts.update(self.player.current_cell(), fright_remaining)
 
         # Task 5.4: eating a frightened ghost.
-        eaten_ghosts = self.ghosts.resolve_player_contact(self.player.current_cell())
+        eaten_ghosts = self.ghosts.resolve_player_contact(self.player.x, self.player.y)
         self.score += eaten_ghosts * self.config.points_per_ghost
 
         # Task 5.5: real ghost contact - only CHASE-state ghosts are dangerous,
@@ -354,7 +354,7 @@ class GameDemo:
         if (
             not self.cheat_invincible
             and not self.player.is_invincible()
-            and self.ghosts.resolve_chase_contact(self.player.current_cell())
+            and self.ghosts.resolve_chase_contact(self.player.x, self.player.y)
         ):
             self.player.lives -= 1
             if self.player.lives <= 0:

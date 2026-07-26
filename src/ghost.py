@@ -18,6 +18,7 @@ from src.movement import (
     is_aligned,
     pick_speed,
     pixel_to_cell,
+    sprites_overlap,
 )
 
 from src.resources import asset_dir
@@ -287,6 +288,12 @@ class GhostManager:
         self.offset_x = offset_x
         self.offset_y = offset_y
 
+        # Contact hitbox, deliberately smaller than the full `cell`x`cell`
+        # sprite: just enough margin to cover the largest possible per-frame
+        # movement (a handful of px) without contact firing a cell early -
+        # see resolve_player_contact/resolve_chase_contact.
+        self._contact_hitbox = max(1, cell // 2)
+
         rows = len(grid)
         cols = len(grid[0])
         # Odd row/col indices are always corridors (walls sit on even edges),
@@ -333,8 +340,16 @@ class GhostManager:
         for ghost in self.ghosts:
             ghost.shift_time(delta)
 
-    def resolve_player_contact(self, player_cell: Cell) -> int:
-        """Eat any FRIGHTENED ghost sharing ``player_cell``.
+    def resolve_player_contact(self, player_x: int, player_y: int) -> int:
+        """Eat any FRIGHTENED ghost whose hitbox overlaps Pac-Man's.
+
+        Uses pixel-bounding-box overlap (:func:`~src.movement.sprites_overlap`)
+        rather than exact-cell equality, which can miss a fast head-on pass
+        entirely if the two sprites cross near a cell boundary within a
+        single frame. The hitbox (``self._contact_hitbox``) is deliberately
+        smaller than the full sprite - just enough margin to cover the
+        largest possible per-frame movement (a few px) - so contact still
+        feels tight and precise rather than triggering a cell early.
 
         Returns:
             How many ghosts were eaten this frame, so the caller can award
@@ -342,18 +357,24 @@ class GhostManager:
         """
         eaten_count = 0
         for ghost in self.ghosts:
-            if ghost.state == "FRIGHTENED" and ghost.current_cell() == player_cell:
+            if ghost.state == "FRIGHTENED" and sprites_overlap(
+                ghost.x, ghost.y, player_x, player_y, self._contact_hitbox
+            ):
                 ghost.get_eaten()
                 eaten_count += 1
         return eaten_count
 
-    def resolve_chase_contact(self, player_cell: Cell) -> bool:
-        """Return ``True`` if a dangerous CHASE-state ghost is on ``player_cell``.
+    def resolve_chase_contact(self, player_x: int, player_y: int) -> bool:
+        """Return ``True`` if a dangerous CHASE-state ghost overlaps Pac-Man.
 
         FRIGHTENED ghosts get eaten instead, and EATEN ghosts are hidden, so
-        both are excluded here.
+        both are excluded here. Uses the same tight pixel hitbox as
+        :meth:`resolve_player_contact`, not exact-cell equality.
         """
         return any(
-            ghost.state == "CHASE" and ghost.current_cell() == player_cell
+            ghost.state == "CHASE"
+            and sprites_overlap(
+                ghost.x, ghost.y, player_x, player_y, self._contact_hitbox
+            )
             for ghost in self.ghosts
         )

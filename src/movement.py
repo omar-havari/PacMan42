@@ -106,6 +106,20 @@ def duty_cycle_ready(accumulator: float, rate: float) -> Tuple[bool, float]:
     return False, accumulator
 
 
+def sprites_overlap(x1: int, y1: int, x2: int, y2: int, cell: int) -> bool:
+    """Return ``True`` if two ``cell``x``cell`` sprites' bounding boxes overlap.
+
+    Used instead of exact-cell-equality collision checks. Cell-equality has a
+    narrow detection window: two sprites crossing near a cell boundary can
+    swap sides within a single frame and never once compute to the same
+    quantized cell, even though they visually passed through each other (a
+    discrete-movement "tunneling" gap). Pixel-overlap has a much wider window
+    - roughly a full cell of approach distance - so at normal game speeds
+    (a few px/frame vs. a ~20px cell) a head-on pass can't skip over it.
+    """
+    return abs(x1 - x2) < cell and abs(y1 - y2) < cell
+
+
 def pick_speed(cell: int) -> int:
     """Return the largest step size (<= ``cell // 6``) that divides ``cell``.
 
